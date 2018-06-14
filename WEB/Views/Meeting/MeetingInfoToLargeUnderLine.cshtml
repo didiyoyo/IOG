@@ -1,0 +1,263 @@
+﻿@model Services.Models.md_seminar_meeting_main
+@using WEB.Model
+@{
+    ViewBag.Title = "会议日程";
+    string path = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DataPath"].ToString();
+    List<MeetingScheduleInfo> meetingShceduleInfo = new List<MeetingScheduleInfo>();
+    if (Model.mhyrc_type == "2")
+    {
+        meetingShceduleInfo = ViewBag.MeetingScheduleInfo as List<MeetingScheduleInfo>;
+    }
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会议详情</title>
+    <link rel="stylesheet" href="~/Content/css/meeting_schedule_temp.css">
+    <style>
+        body {
+            background: url('/IO/Content/images/temp_bg@2x.png') no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .itinerary .head {
+            background: url('/IO/Content/images/xt@2x.png') no-repeat;
+            background-size: 100% 100%;
+        }
+
+            .itinerary .head span {
+                background: url('/IO/Content/images/table_title@2x.png') no-repeat;
+                background-size: 100%;
+            }
+
+        .footer {
+            background: url('/IO/Content/images/temp_footer@2x.png') no-repeat;
+            background-size: 100%;
+        }
+        .btnBox {
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+            z-index: 100;
+        }
+        .btnGroup {
+            display: flex;
+            justify-content: center;
+            
+        }
+        .btnGroup img {
+            width: 2.2rem;
+            height: .8rem;
+        }
+        
+    </style>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/layer.mobile/layer.js"></script>
+    <script src="~/Scripts/photoswipe.js"></script>
+    <script src="~/Scripts/photoswipe-ui-default.min.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/GetBrowser.js"></script>
+</head>
+<body>
+    <div class="title" id='title'>
+        @Model.mtitle
+    </div>
+
+
+    <h6 class='listItem time'>
+        <span class="listL">时间：</span><span class="listR">@Model.mbegintime.Value.ToString("MM月dd日 HH:mm") &nbsp;--&nbsp; @Model.mendtime.Value.ToString("MM月dd日 HH:mm")</span>
+    </h6>
+    <h6 class='listItem place'>
+        <span class="listL">地点：</span><span class="listR">@Model.msite</span>
+    </h6>
+    @if (!string.IsNullOrEmpty(Model.chairman))
+    {
+        <h6 class='listItem chairman'><span class="listL">主席：</span><span class="listR">@(Model.chairman)</span></h6>
+    }
+    @if (!string.IsNullOrEmpty(Model.speakers))
+    {
+        <h6 class='listItem speecher'><span class="listL">讲者：</span><span class="listR">@Html.Raw(Model.speakers)</span></h6>
+    }
+
+    <img src="/IO/Content/images/qiu@2x.png" class="earthPic" />
+
+    <h6 class="blank"></h6>
+    @if (!string.IsNullOrEmpty(Model.introduction))
+    {
+        <!-- 会议简介 需要根据判断是否渲染 -->
+        <div class='meetingInfo'>
+            <h5 class="head"></h5>
+            <h6 class='meetingDesc'>@Model.introduction</h6>
+            <h5 class="foot"></h5>
+        </div>
+    }
+
+    <div class="schedule">
+        @foreach (var meetingSchedule in meetingShceduleInfo)
+        {
+            <!-- 循环显示每日日程 -->
+            <div class="itinerary">
+                <p class='date'>@meetingSchedule.MarkTime.ToString("MM月dd日") 日程</p>
+                <div class="head">
+                    <span>时间</span>
+                    <span>讲题</span>
+                    <span>讲者</span>
+                </div>
+                <div class="table">
+                    @foreach (var agenda in meetingSchedule.AgendaList)
+                    {
+                        <!-- 循环每个时段项目 -->
+                        <div class="line">
+                            <h6 class="l">@agenda.time</h6>
+                            <h6 class="c">@agenda.schedule</h6>
+                            <h6 class="r">@agenda.name</h6>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <div class="footer"></div>
+    <div class="btnBox">
+        <div class="btnGroup">
+            @if (Model.vote)
+            {
+                <img src="~/Content/images/hyhd@2x.png" onclick="Jump('1')">
+            }
+            @if (Model.live)
+            {
+                <img src="~/Content/images/zxgk@2x.png" onclick="Jump('3')">
+            }
+            @if (ViewBag.IsData == "true")
+            {
+                <img src="~/Content/images/hyzl@2x.png" onclick="Jump('2')">
+            }
+        </div>
+
+    </div>
+
+    @*<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>*@
+    <script>
+
+        var calculate_size = function () {
+            var BASE_FONT_SIZE = 100,
+                docEl = document.documentElement,
+                clientWidth = docEl.clientWidth;
+            if (clientWidth) {
+                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+            }
+        };
+        // Abort if browser does not support addEventListener
+        if (document.addEventListener) {
+            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+            window.addEventListener(resizeEvt, calculate_size, false);
+            document.addEventListener('DOMContentLoaded', calculate_size, false);
+            calculate_size();
+        }
+        $(function () {
+            WriteLog('@Model.mid', '', "VIEW", "浏览");
+            var documentHeight = $("body").height();
+            var fixHeight = $(".fix-tap").height();
+
+            //$(".fix-obj").height(documentHeight - fixHeight);
+            var fixObj = $(".fix-obj").height()+7;
+
+            //$("#_contain").css({ "height": fixObj, "overflow": "hidden", "overflow-y": "scroll" });
+
+
+            //$(".objf").height(documentHeight-60);
+            $(".objf").height('100%');
+
+            $(window).resize(function () {
+                var documentHeight = $("body").height();
+                var fixHeight = $(".fix-tap").height();
+                //$(".fix-obj").css('paddingTop', fixHeight);
+                $(".fix-obj").height(documentHeight - fixHeight);
+                //$(".fix-obj").height('100vh');
+
+                var fixObj = $(".fix-obj").height()+7;
+
+                $("#_contain").css({ "height": fixObj, "overflow": "hidden", "overflow-y": "scroll" });
+
+                //$(".objf").height(documentHeight-60);
+                $(".objf").height('100%');
+            });
+
+        });
+
+        function Jump(type) {
+            var bTime = '@Model.mbegintime';
+            var eTime = '@Model.mendtime';
+            var vote = '@Model.vote';
+            var question = '@Model.question';
+            var survey = '@Model.survey';
+            switch (type) {
+                case "1":
+                    AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击会议互动按钮", '@Model.mid', '');
+                    if (new Date(bTime).getTime() < new Date().getTime()) {
+                        // (new Date(eTime).getTime() > new Date().getTime()) {
+                        if (vote.toLowerCase() == "true" || question.toLowerCase() == "true" || survey.toLowerCase() == "true") {
+                            click_log('@Model.mid', "会议互动");
+                            //window.location.href = "/IO/Meeting/Interaction/@Model.mid";
+                            window.location.href = "/IO/Vote/Index/@Model.mid";
+                            return;
+                        } else {
+                            layer.open({ content: "暂无互动", time: 2 });
+                            return;
+                        }
+                        //} else {
+                        //    layer.open({ content: "会议已结束", time: 2 });
+                        //    return;
+                        //}
+                    } else {
+                        layer.open({ content: "请在会议开始后进入", time: 2 });
+                        return;
+                    }
+                    break;
+                case "2":
+                    AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击会议资料按钮", '@Model.mid', '');
+                    var isdata = '@ViewBag.IsData';
+                    if (isdata == 'true') {
+                        click_log('@Model.mid', "会议资料");
+                        window.location.href = "/IO/Meeting/DataList/@Model.mid";
+                        return;
+                    } else {
+                        layer.open({ content: "很高兴您参加了BMS会议，我们将在会后上传相关的资料给予您查阅", time: 2 });
+                        return;
+                    }
+                    break;
+                case "3":
+                    click_log('@Model.mid', "在线观看");
+                    AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击在线观看按钮", '@Model.mid', '');
+                    window.location.href = '@(Html.Raw( Model.liveURL))';
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    </script>
+
+    <script>
+        function click_log(mid, type) {
+            $.ajax({
+                url: "/IO/ClickLog/Click_Log",
+                type: "post",
+                data: { "mid": mid, "modelName": type },
+                success: function (r) {
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+input, select {
+    -webkit-appearance: none;
+}
+input::-webkit-input-placeholder {
+    color: #aabab9;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, "Microsoft YaHei";
+}
+
+h5 {
+    font-size: .22rem;
+    color: #5c7487;
+    font-weight: normal;
+}
+h6 {
+    font-size: .18rem;
+    color: #4a6983;
+    font-weight: normal;
+}
+p {
+    font-size: .2rem;
+    color: #666666;
+}

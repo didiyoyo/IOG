@@ -1,0 +1,222 @@
+﻿@model Services.Models.md_seminar_vote
+@{
+    ViewBag.Title = "投票";
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>投票</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+</head>
+<body>
+    <section class="bakgray">
+        <div class="vote-content">
+            <div class="vote-choice">
+                @*<p class="invet-title">投票</p>*@
+                <div class="choice-title more-chioce">
+                    <p id="choice-single" data-value="@Model.vtype">@Model.vtopic @(@Model.vtype == 1 ? "(多选)" : "(单选)")</p>
+                </div>
+                <div class="choice-answer">
+                    @if (Model.vanswer != null)
+                    {
+                        string[] ans = Model.vanswer.Split('|');
+                        for (int i = 0; i < ans.Length; i++)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    <div class="op-back">
+                                        <div class="choice-first" data-value="A">
+                                            <span class="ch-a"></span>
+                                            <p class="c_black" data-value="@ans[i]">@ans[i].Substring(2)</p>
+                                        </div>
+                                    </div>
+                                    break;
+                                case 1:
+                                    <div class="op-back">
+                                        <div class="choice-first" data-value="A">
+                                            <span class="ch-b"></span>
+                                            <p class="c_black" data-value="@ans[i]">@ans[i].Substring(2)</p>
+                                        </div>
+                                    </div>
+                                    break;
+                                case 2:
+                                    <div class="op-back">
+                                        <div class="choice-first" data-value="A">
+                                            <span class="ch-c"></span>
+                                            <p class="c_black" data-value="@ans[i]">@ans[i].Substring(2)</p>
+                                        </div>
+                                    </div>
+                                    break;
+                                case 3:
+                                    <div class="op-back">
+                                        <div class="choice-first" data-value="A">
+                                            <span class="ch-d"></span>
+                                            <p class="c_black" data-value="@ans[i]">@ans[i].Substring(2)</p>
+                                        </div>
+                                    </div>
+                                    break;
+                                case 4:
+                                    <div class="op-back">
+                                        <div class="choice-first" data-value="A">
+                                            <span class="ch-e"></span>
+                                            <p class="c_black" data-value="@ans[i]">@ans[i].Substring(2)</p>
+                                        </div>
+                                    </div>
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+
+
+                </div>
+                <input id="submit" type="button" class="btn nexttitle" value="" />
+            </div>
+    </section>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/layer.mobile/layer.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <script>
+        var calculate_size = function () {
+            var BASE_FONT_SIZE = 100,
+                docEl = document.documentElement,
+                clientWidth = docEl.clientWidth;
+            if (clientWidth) {
+                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+            }
+        };
+        // Abort if browser does not support addEventListener
+        if (document.addEventListener) {
+            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+            window.addEventListener(resizeEvt, calculate_size, false);
+            document.addEventListener('DOMContentLoaded', calculate_size, false);
+            calculate_size();
+        }
+
+        $(function () {
+            WriteLog('', '', "VIEW", "浏览");
+            var documentHeight = $(document).height();
+            //alert(documentHeight);
+            $(".bakgray").height(documentHeight);
+            $(window).resize(function () {
+                var documentHeight = $(document).height();
+
+                $(".bakgray").height(documentHeight);
+
+            });
+            var dataNum = $("#choice-single").attr("data-value");
+            //alert(dataNum);
+
+            if (dataNum == 1) {
+                $(".op-back div").on("click", function () {
+                    if ($(this).hasClass("choice-first")) {
+                        $(this).removeClass("choice-first").addClass("choiced-first");
+                        $(this).children(".ch-a").addClass("chd-a").removeClass("ch-a");
+                        $(this).children(".ch-b").addClass("chd-b").removeClass("ch-b");
+                        $(this).children(".ch-c").addClass("chd-c").removeClass("ch-c");
+                        $(this).children(".ch-d").addClass("chd-d").removeClass("ch-d");
+                        $(this).children(".ch-e").addClass("chd-e").removeClass("ch-e");
+                        $(this).children(".c_black").addClass("c_white").removeClass("c_black");
+                    } else {
+                        $(this).addClass("choice-first").removeClass("choiced-first");
+                        $(this).children(".chd-a").addClass("ch-a").removeClass("chd-a");
+                        $(this).children(".chd-b").addClass("ch-b").removeClass("chd-b");
+                        $(this).children(".chd-c").addClass("ch-c").removeClass("chd-c");
+                        $(this).children(".chd-d").addClass("ch-d").removeClass("chd-d");
+                        $(this).children(".chd-e").addClass("ch-e").removeClass("chd-e");
+                        $(this).children(".c_white").addClass("c_black").removeClass("c_white");
+                        $(".op-back").removeClass("choice-first");
+                    }
+                });
+            } else {
+                $(".op-back div").on("click", function () {
+                    $(".op-back div").each(function (index, value) {
+                        $(value).addClass("choice-first").removeClass("choiced-first");
+                        $(value).children(".ch-a").addClass("ch-a").removeClass("chd-a");
+                        $(value).children(".ch-b").addClass("ch-b").removeClass("chd-b");
+                        $(value).children(".ch-c").addClass("ch-c").removeClass("chd-c");
+                        $(value).children(".ch-d").addClass("ch-d").removeClass("chd-d");
+                        $(value).children(".ch-e").addClass("ch-e").removeClass("chd-e");
+                      //  $(value).children(".c_black").addClass("c_black").removeClass("c_white");
+                        $(".c_white",value).addClass("c_black").removeClass("c_white")
+
+                    });
+
+                    $(this).addClass("choiced-first").removeClass("choice-first");
+                    $(this).children(".chd-a").addClass("ch-a").removeClass("chd-a");
+                    $(this).children(".chd-b").addClass("ch-b").removeClass("chd-b");
+                    $(this).children(".chd-c").addClass("ch-c").removeClass("chd-c");
+                    $(this).children(".chd-d").addClass("ch-d").removeClass("chd-d");
+                    $(this).children(".chd-e").addClass("ch-e").removeClass("chd-e");
+                    $(this).children(".c_black").addClass("c_white").removeClass("c_black");
+                    $(this).children(".ch-a").addClass("chd-a");
+                    $(this).children(".ch-b").addClass("chd-b");
+                    $(this).children(".ch-c").addClass("chd-c");
+                    $(this).children(".ch-d").addClass("chd-d");
+                    $(this).children(".ch-e").addClass("chd-e");
+                   $(".op-back").removeClass("choice-first");
+
+
+                })
+            }
+
+        });
+
+        $("#submit").click(function () {
+            var ans = [];
+            $(".choiced-first").each(function () {
+                ans.push($("p", this).attr("data-value"));
+            });
+            if (ans.length == 0) {
+                layer.open({ content: "请选择答案", time: 2 });
+                return;
+            }
+            var tempans = ans.join("^");
+            layer.open({ type: 2, shadeClose: false, });
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "CREATE", "点击提交按钮",  '@Model.vid', ans.toString().replace(/\,/g, ","));
+            $.ajax({
+                url: "/IO/Vote/AddVote",
+                type: "post",
+                data: { "vid": @Model.vid,"vresult":tempans},
+                success: function (r) {
+                    layer.closeAll();
+                    if (!r.success) {
+                        layer.open({content: r.msg,time: 2,shadeClose: false,});
+                    } else {
+                        layer.open({
+                            content: r.msg,
+                            shadeClose: false,
+                        });
+                        setTimeout(function () {
+                            layer.closeAll();
+                            window.location.href = "/IO/Vote/VoteChart/@Model.vid"+"?mid="+@Model.mid;
+                        }, 2000);
+                    }
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>

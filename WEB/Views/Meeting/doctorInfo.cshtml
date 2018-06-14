@@ -1,0 +1,66 @@
+﻿@model Services.Models.md_seminar_meeting_main
+@{
+    Layout = null;
+    string fileRoute = null;
+    if (Model.doctortype != 1 && Model.doctortype != 2 && Model.doctortype != 3)
+    {
+        fileRoute = ViewBag.FileRoute;
+    }
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>讲者简介</title>
+    <style>
+        html, body, div,iframe {
+            width:100%;
+            height:100%;
+            margin:0px;
+            padding:0px;
+        }
+    </style>
+    <script src="~/Scripts/jquery.min.js"></script>
+    
+</head>
+<body style="overflow:hidden;">
+    <div>
+
+        @if (Model.doctortype == 1)
+        {
+            <img width="100%" src="@(System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DataPath"] + Model.doctorimg)" />
+        }
+        else if (Model.doctortype == 2)
+        {
+            <div style="-webkit-overflow-scrolling:touch; overflow: scroll; height: 100vh;">
+                <iframe src="@(Model.doctorurl)" class="objf" scrolling="no" frameborder="0" style="width: 1px; min-width: 100%; *width: 100%;"></iframe>
+            </div>
+        }
+        else if (Model.doctortype == 3)
+        {
+            <div style="-webkit-overflow-scrolling:touch; overflow: scroll; height: 100vh;">
+                <iframe style="width: 100%;height: 100%;" class="objf" src="@(System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DataPath"] + Model.doctorimg)" frameborder="0" scrolling="yes"></iframe>
+            </div>
+        }
+        else if (Model.doctortype == 4)
+        {
+
+        }
+        else if (Model.doctortype == 5)
+        {
+
+        }
+        else
+        {
+
+        }
+    </div>
+    <script>
+        if (!navigator.userAgent.match(/iPad|iPhone/i)) {
+            $('.objf').attr('scrolling', 'yes');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+﻿@model IEnumerable<Services.Models.md_seminar_meeting_main>
+@{
+    ViewBag.Title = "我的会议";
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>我的会议</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+
+
+
+</head>
+<body>
+    <section class="mymeet">
+        <ul class="meet-list">
+            @if ((@ViewBag.toDayList).Count != 0)
+            {
+                int i = 1;
+                foreach (var item in ViewBag.toDayList)
+                {
+                    if (i == 1)
+                    {
+                        <li onclick="Jump(@item.mid)" style="margin-top:4%;">
+                            <h6 class="meet-now">今日召开</h6>
+                            <div class="meet-cont">
+                                <p class="meet-title">@item.mtitle</p>
+                                <div class="mTitle">
+                                    <div class="meet-new">
+                                        <p>开始时间:<span>@Convert.ToDateTime(@item.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>结束时间:<span>@Convert.ToDateTime(@item.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>地点:<span>@item.msite</span></p>
+                                    </div>
+                                    <img src="~/Content/images/anst.png" style="width: 30%;" />
+                                </div>
+                            </div>
+                        </li>
+                        i = 2;
+                    }
+                    else
+                    {
+                        <li onclick="Jump(@item.mid)">
+                            <div class="meet-cont">
+                                <p class="meet-title">@item.mtitle</p>
+                                <div class="mTitle">
+                                    <div class="meet-new">
+                                        <p>开始时间:<span>@Convert.ToDateTime(@item.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>结束时间:<span>@Convert.ToDateTime(@item.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>地点:<span>@item.msite</span></p>
+                                    </div>
+                                    <img src="~/Content/images/anst.png" style="width: 30%;" />
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+            }
+
+            @if ((@ViewBag.notOpendList).Count != 0)
+            {
+                int i = 1;
+                foreach (var item in ViewBag.notOpendList)
+                {
+                    if (i == 1)
+                    {
+                        <li onclick="Jump(@item.mid)" style="margin-top:4%;">
+                            <h6 class="meet-no">未召开</h6>
+                            <div class="no-new">
+                                <p class="meet-title">@item.mtitle</p>
+                                <div class="mTitle">
+                                    <div class="meet-new">
+                                        <p>开始时间:<span>@Convert.ToDateTime(@item.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>结束时间:<span>@Convert.ToDateTime(@item.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>地点:<span>@item.msite</span></p>
+                                    </div>
+                                    <img src="~/Content/images/anst.png" style="width: 30%;" />
+                                </div>
+                            </div>
+                        </li>
+                        i = 2;
+                    }
+                    else
+                    {
+                        <li onclick="Jump(@item.mid)" style="">
+                            <div class="no-new">
+                                <p class="meet-title">@item.mtitle</p>
+                                <div class="mTitle">
+                                    <div class="meet-new">
+                                        <p>开始时间:<span>@Convert.ToDateTime(@item.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>结束时间:<span>@Convert.ToDateTime(@item.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>地点:<span>@item.msite</span></p>
+                                    </div>
+                                    <img src="~/Content/images/anst.png" style="width: 30%;" />
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+            }
+
+            @if ((@ViewBag.opendList).Count != 0)
+            {
+                int i = 1;
+                foreach (var item in ViewBag.opendList)
+                {
+                    if (i == 1)
+                    {
+                        <li onclick="Jump(@item.mid)" style="margin-top:4%;">
+                            <h6 class="meet-finish">已完成</h6>
+                            <div class="finish-new">
+                                <p class="meet-title">@item.mtitle</p>
+                                <div class="mTitle">
+                                    <div class="meet-new">
+                                        <p>开始时间:<span>@Convert.ToDateTime(@item.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>结束时间:<span>@Convert.ToDateTime(@item.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>地点:<span>@item.msite</span></p>
+                                    </div>
+                                    <img src="~/Content/images/anst.png" style="width: 30%;" />
+                                </div>
+                            </div>
+                        </li>
+                        i = 2;
+                    }
+                    else
+                    {
+                        <li onclick="Jump(@item.mid)">
+                            <div class="finish-new">
+                                <p class="meet-title">@item.mtitle</p>
+                                <div class="mTitle">
+                                    <div class="meet-new">
+                                        <p>开始时间:<span>@Convert.ToDateTime(@item.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>结束时间:<span>@Convert.ToDateTime(@item.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                        <p>地点:<span>@item.msite</span></p>
+                                    </div>
+                                    <img src="~/Content/images/anst.png" style="width: 30%;" />
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+            }
+            @if ((@ViewBag.toDayList).Count == 0 && (@ViewBag.notOpendList).Count == 0 && (@ViewBag.opendList).Count == 0)
+            {
+                <li style="padding-top:50%; text-align:center; font-size:20px; font-weight:bold;">
+                    您目前还没有接受任何会议
+                </li>
+            }
+
+        </ul>
+    </section>
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/getbrowser.js"></script>
+
+
+    <script>
+
+        var calculate_size = function () {
+            var BASE_FONT_SIZE = 100,
+                docEl = document.documentElement,
+                clientWidth = docEl.clientWidth;
+            if (clientWidth) {
+                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+            }
+        };
+        // Abort if browser does not support addEventListener
+        if (document.addEventListener) {
+            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+            window.addEventListener(resizeEvt, calculate_size, false);
+            document.addEventListener('DOMContentLoaded', calculate_size, false);
+            calculate_size();
+        }
+        $(function(){
+            WriteLog('', '',"VIEW","浏览");
+
+            var documentHeight = $(document).height();
+            $(".mymeet").height(documentHeight);
+            $(window).resize(function () {
+                var documentHeight = $(document).height();
+                $(".mymeet").height(documentHeight);
+
+            });
+            $(".meet-title").each(function () {
+                var html=this.innerHTML;
+                this.innerHTML=html.replace(/\®/g,"<sup>®</sup>").replace(/\©/g,"<sup>©</sup>");
+            });
+        })
+
+        function click_log(mid,type) {
+            $.ajax({
+                url: "/IO/ClickLog/Click_Log",
+                type: "post",
+                data: { "mid": mid, "modelName": type },
+                success: function (r) {
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+
+        function Jump(id) {
+            click_log(id,"会议");
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"),"VIEW","浏览会议",id,'');
+            window.location.href = "/IO/Meeting/MeetingInfo/" + id;
+        }
+    </script>
+
+</body>
+
+</html>

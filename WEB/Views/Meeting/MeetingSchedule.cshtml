@@ -1,0 +1,407 @@
+﻿@using WEB.Model
+@using Services.Models
+@using Services.Enums
+@model Services.Models.md_seminar_meeting_main
+@{
+    ViewBag.Title = "会议日程";
+    string path = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DataPath"].ToString();
+    List<MeetingScheduleInfo> meetingShceduleInfo = new List<MeetingScheduleInfo>();
+    if (Model.mhyrc_type == "2")
+    {
+        meetingShceduleInfo = ViewBag.MeetingScheduleInfo as List<MeetingScheduleInfo>;
+    }
+    bool isAccept = false;
+    if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine)
+    {
+        isAccept = Convert.ToBoolean(ViewBag.IsAccept);
+    }
+    var isImport = (bool)ViewBag.IsImport;
+    var userInfo = ViewBag.Userinfo as UserInfo;
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>会议日程</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1,user-scalable=no">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/css/meeting_schedule.css">
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/layer.mobile/layer.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <style type="text/css">
+        /* 图片地址需要修改 */
+        body {
+            background: url('/IO/Content/images/bg@2x.png') no-repeat;
+            background-size: 100% 100%;
+            width: 100%;
+        }
+        /* body::before {
+            content: ' ';
+            position: fixed;
+            z-index: -1;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: url('./images/bg@2x.png') center 0 no-repeat;
+            background-size: cover;
+        } */
+        div.body {
+            /* background: url('./images/qhbg@2x.png') no-repeat;
+            background-size: 100% 100%;
+            width: 100%; */
+            /* margin-top: 2rem; */
+        }
+    #img {
+        /*height: 100vh;*/
+    }
+        .btnBox {
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .btnGroup {
+            display: flex;
+            justify-content: center;
+        }
+
+            .btnGroup img {
+                width: 2.2rem;
+                height: .8rem;
+            }
+       
+    </style>
+
+</head>
+<body>
+    <input id="mid" type="hidden" value="@(Model.mid)" />
+    <input id="StartTime" type="hidden" value="@ViewBag.StartTime" />
+    <input id="EndTime" type="hidden" value="@ViewBag.EndTime" />
+    <input id="MeetingMode" type="hidden" value="@Model.meetingmode" />
+    <input id="doctortype" type="hidden" value="@Model.doctortype" />
+    @* <section class="" style="height: 100vh; overflow: hidden;">*@
+    @if (Model.mhyrc_type == "0" || Model.mhyrc_type == "1" || Model.mhyrc_type == null)
+    {
+        <section class="" style="height: 100vh;">
+
+            <div id="inv-main1" class="fix-obj">
+
+
+                <img id="img" style="width:100%;" src="~/Content/images/z.jpg" />
+
+
+            </div>
+            @if (Model.mhyrc_type == "0" || Model.mhyrc_type == null)
+            {
+                if (Model.mhyrc_type == null)
+                {
+                    <script>
+                        $("#inv-main1").css("display", "none");
+                    </script>
+                }
+                else
+                {
+                    <script>
+                $("#_contain").css("display", "block");
+                        var img = '@Html.Raw(Model.mhyrc_img)';
+                        console.log(img);
+                if (img.length != 0) {
+
+                    $("#img").attr("src", '@path@Html.Raw(Model.mhyrc_img)');
+                    //$("#inv-main").css("background", "url('@path@Model.mhyrc_img') no-repeat");
+                }
+                else {
+                    $("#inv-main1").css("display", "none");
+                    $('#img').css("display", "none");
+                }
+                    </script>
+                }
+            }
+            else if (Model.mhyrc_type == "1")
+            {
+                <div style="-webkit-overflow-scrolling:touch; overflow: scroll; height: 100vh">
+                    <iframe id="objf" class="objf" src="" scrolling="no" frameborder="0" style="width: 1px; min-width: 100%; *width: 100%;"></iframe>
+                </div>
+                    <script>
+                    if ("@Model.mhyrc_url".indexOf("http") < 0 && "@Model.mhyrc_url".indexOf("https") < 0) {
+                        layer.open({ content: "会议日程地址不正确" });
+                    } else {
+                        $("#objf").attr("src", '@Model.mhyrc_url');
+                    }
+                     $("#inv-main1").css("display", "none");
+
+                    </script>
+
+                if (ViewBag.mid == 21)
+                {
+                    <div style="height:100%;-webkit-overflow-scrolling:touch;overflow:auto">
+                        <iframe class="objf" src="http://file0c12d51081dc.vt.iamh5.cn/v3/idea/p4gMg2yB" scrolling="no" frameborder="0" style="width: 1px; min-width: 100%; *width: 100%;"></iframe>
+                    </div>
+                    <audio style="display:none" id="car_audio" loop="loop" src="http://file.ih5.cn/v3/files/2121877/20170929/0ca73ad4.mp3" autoplay="autoplay" controls="controls"></audio>
+                    <script>
+                        audioAutoPlay('car_audio');
+                        function audioAutoPlay(id) {
+                            var audio = document.getElementById(id);
+                            audio.play();
+                            document.addEventListener("WeixinJSBridgeReady", function () {
+                                audio.play();
+                            }, false);
+                        }
+                    </script>
+                }
+            }
+        </section>
+    }
+    else
+    {
+        if (Model.meetingmode != 3)
+        {
+            <div class='header'>
+                <div class='headerTitle'>@Model.mtitle</div>
+            </div>
+            <img src="/IO/Content/images/io@2x.png" class='topImg'>
+            <div class="body">
+                <div class="info">
+                    @if (!string.IsNullOrEmpty(Model.introduction))
+                    {
+                        <h5>会议简介：</h5>
+                        <h6 class='top'>@Model.introduction</h6>
+                    }
+                    <h5>会议时间：</h5>
+                    <h6>@Model.mbegintime.Value.ToString("MM月dd日 HH:mm") &nbsp;--&nbsp; @Model.mendtime.Value.ToString("MM月dd日 HH:mm")</h6>
+                    <h5>会议地点：</h5>
+                    <h6>@Model.msite</h6>
+                </div>
+                @foreach (var meetingSchedule in meetingShceduleInfo)
+                {
+                    <!-- 日期循环 -->
+                    <div class="schedule">
+                        <p class='scheduleDate'>@meetingSchedule.MarkTime.ToString("MM月dd日") 日程</p>
+                        <div class="list listHeader">
+                            <div class="l">时间</div>
+                            <div class="c">内容</div>
+                            <div class="r">演讲人员</div>
+                        </div>
+                        @foreach (var agenda in meetingSchedule.AgendaList)
+                        {
+                            <div class="list">
+                                <div class="l">@agenda.time</div>
+                                <div class="c">@agenda.schedule</div>
+                                <div class="r">@agenda.name</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            //大型线下会议模板
+        }
+    }
+
+    <div class="footer"></div>
+    <div class="btnBox">
+        <div class="btnGroup">
+            @if (Model.meetingmode == 3 && !isImport)
+            {
+
+            }
+            else
+            {
+                @*<img src="~/Content/images/btn-yy.png" alt="预约参会" id="resver" />*@
+            if (!string.IsNullOrEmpty(Model.doctorimg) || !string.IsNullOrEmpty(Model.doctorurl))
+            {
+                if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && isAccept)
+                {
+                    <img src="~/Content/images/speechInfo@2x.png" alt="讲者简介" id="info" />
+                }
+                else
+                {
+                    <img src="~/Content/images/acceptInvitionHalf@2x.png" alt="确认参会" id="resver" />
+                    <img src="~/Content/images/btn_jj@2x.png" alt="讲者简介" id="info" />
+                }
+            }
+            else
+            {
+                if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && isAccept)
+                {
+
+                }
+                else
+                {
+                    <img src="~/Content/images/acceptInvition@2x.png" alt="确认参会" id="resver" />
+                    }
+                }
+            }
+        </div>
+        @if (Model.meetingmode == 3 && !isImport)
+        {
+
+        }
+        else
+        {
+            if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && isAccept)
+            {
+
+            }
+            else
+            {
+                <h6 id="license">
+                    @*<input type="checkbox" id="accept" />*@
+                    @*<a href="/IO/Scripts/Pdf/web/viewer.html?file=Acceptance Note.pdf" style="color: #585151; text-decoration: none;">我已阅读<u>《接受函》</u>内容并接受</a>*@
+                    <a href="/IO/Meeting/GetLetterOfAcceptance" style="color: #585151; text-decoration: none;">我已阅读<u>《接受函》</u>内容并接受</a>
+
+                </h6>
+            }
+        }
+
+    </div>
+
+    <script>
+
+                if (!navigator.userAgent.match(/iPad|iPhone/i)) {
+                    $('.objf').attr('scrolling', 'yes');
+                }
+
+
+        click_log($("#mid").val(), "查看邀请函", null)
+        var calculate_size = function () {
+            var BASE_FONT_SIZE = 100,
+                docEl = document.documentElement,
+                clientWidth = docEl.clientWidth;
+            if (clientWidth) {
+                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+            }
+        };
+        // Abort if browser does not support addEventListener
+        if (document.addEventListener) {
+            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+            window.addEventListener(resizeEvt, calculate_size, false);
+            document.addEventListener('DOMContentLoaded', calculate_size, false);
+            calculate_size();
+        }
+        $(function () {
+            WriteLog('@ViewBag.mid', '', "VIEW", "浏览");
+
+            var bodHeight = $("body").height();
+            //$(".objf").height(bodHeight);
+            $(".objf").height('100%');
+
+            if ($("#img").attr("src") == "/IO/Content/images/z.jpg") {
+                $("#img").height(bodHeight);
+            }
+
+            $(window).resize(function () {
+                var bodHeight = $("body").height();
+
+                if ($("#img").attr("src") == "/IO/Content/images/z.jpg") {
+                    $("#img").height(bodHeight);
+                }
+            });
+            $("#resver").click(function () {
+                //if (!$('#accept').attr('checked')) {
+                //    return alert('请先阅读《接受函》并勾选');
+                //}
+                click_log($("#mid").val(), "参加会议", function () {
+                    $.ajax({
+                        url: "/IO/Meeting/JoinMeeting",
+                        type: "post",
+                        data: { "MId": $("#mid").val(), "State": 1 },
+                        success: function (r) {
+                            console.log(r);
+                            if ($('#MeetingMode').val() == '3') {
+                                layer.open({
+                                    content: "会议预约成功。</br>会务组将和您的手机号@(string.IsNullOrEmpty(userInfo.mobile)?"":(userInfo.mobile.Substring(0,3)+"****"+userInfo.mobile.Substring(7,4)))联系。请注意接听来电。",
+                                    btn: ['我知道了'],
+                                    yes: function () {
+                                        layer.closeAll();
+                                        window.location.href = "/IO/Meeting/Index/1";
+                                    }
+                                });
+                            }
+                            else {
+                                layer.open({
+                                    content: r.success ? '您已预约成功。在会议开始前将接收到会议提醒消息' : r.msg,
+                                    btn: 'OK',
+                                    yes: function () {
+                                        layer.closeAll();
+                                        window.location.href = "/IO/Meeting/Index/1";
+                                    }
+                                });
+                            }
+
+                        },
+                        error: function (r) {
+                            console.log(r.responseText);
+                        }
+                    });
+                });
+
+
+
+
+            });
+            $("#info").click(function () {
+                layer.open({ type: 2, shadeClose: false });
+                click_log($("#mid").val(), "查看讲者", function () {
+                    if ($('#doctortype').val() == '1' || $('#doctortype').val() == '2') {
+                        layer.closeAll();
+                        window.location.href = "/IO/Meeting/doctorInfo/" + $("#mid").val();
+                    }
+                    else {
+                        $.ajax({
+                            url: "/IO/Meeting/GetDoctorInfo/" + $("#mid").val(),
+                            type: "post",
+                            success: function (r) {
+                                if (r) {
+                                    layer.closeAll();
+                                    window.location.href = r;
+                                }
+                            },
+                            error: function (r) {
+                                layer.closeAll();
+                                console.log(r.responseText);
+                            }
+                        });
+                    }
+
+                });
+            });
+        });
+        function click_log(mid, type, callback) {
+            $.ajax({
+                url: "/IO/ClickLog/Click_Log",
+                type: "post",
+                data: { "mid": mid, "modelName": type },
+                success: function (r) {
+                    if (callback) {
+                        callback();
+                    }
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+    </script>
+
+
+</body>
+</html>

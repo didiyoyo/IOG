@@ -1,0 +1,221 @@
+﻿@model IEnumerable<Services.Models.md_seminar_survey>
+@{
+    ViewBag.Title = "调研";
+    int index = 0;
+    List<Services.Models.md_seminar_survey> list = Model as List<Services.Models.md_seminar_survey>;
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>调研</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+</head>
+<body>
+    <section class="bakgray">
+        <div class="inv-content">
+            @if (list != null)
+            {
+                <input id="mid" type="hidden" value="@list[index].mid" />
+                <div class="inv-choice">
+                    <p class="invet-title">调研</p>
+
+                    <div class="choice-title">
+                        <p id="brand" data-value="@list[index].stype" data-id="@list[index].sid">@(index + 1). @list[index].stitle @(list[index].stype == 1 ? "(多选)" : "(单选)")</p>
+                        <span class="line"></span>
+                        <ul id="block">
+                            @if (list[index].sanswer != null)
+                            {
+                                string[] ans = list[index].sanswer.Split('|');
+                                for (int i = 0; i < ans.Length; i++)
+                                {
+                                    <li class="chioced clearfix">
+                                        <div class="checkbtn" data-value="@ans[i]"></div>
+                                        <p>@ans[i]</p>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                if (list.Count() - 1 == index)
+                {
+                    <div style="height:38px;"><input id="submit" type="button" class="btn nexttitle" value="提  交" /></div>
+                }
+                else
+                {
+                    <div style="height:38px;"><input id="submit" type="button" class="btn nexttitle" value="下一题" /></div>
+                }
+            }
+        </div>
+    </section>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/layer.mobile/layer.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <script>
+    $(function(){
+        WriteLog('', '',"VIEW","浏览");
+        var documentHeight = $(document).height();
+        $(".bakgray").height(documentHeight);
+        $(window).resize(function () {
+            var documentHeight = $(document).height();
+            $(".bakgray").height(documentHeight);
+
+        });
+    })
+
+    var calculate_size = function () {
+        var BASE_FONT_SIZE = 100,
+            docEl = document.documentElement,
+            clientWidth = docEl.clientWidth;
+        if (clientWidth) {
+            docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+        }
+    };
+    // Abort if browser does not support addEventListener
+    if (document.addEventListener) {
+        var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+        window.addEventListener(resizeEvt, calculate_size, false);
+        document.addEventListener('DOMContentLoaded', calculate_size, false);
+        calculate_size();
+    }
+
+    function RegisterClick() {
+        var dataNum = $("#brand").attr("data-value");
+        if (dataNum == 1) {
+            $(".chioced").on("click", function () {
+                if ($(this).children("div").hasClass("checkbtn")) {
+                    $(this).children("div").removeClass("checkbtn").addClass("checkdbtn");
+                } else {
+                    $(this).children("div").removeClass("checkdbtn").addClass("checkbtn");
+                }
+            });
+        } else {
+            $(".chioced").on("click", function () {
+                $(".chioced").each(function (index, value) {
+                    $(value).children("div").addClass("checkbtn").removeClass("checkdbtn");
+                });
+                $(this).children("div").addClass("checkdbtn").removeClass("checkbtn");
+
+            });
+        }
+    }
+
+    $(function () {
+        var _index=0;
+
+        // 点击选择按钮
+        RegisterClick();
+        var next=1;
+        var _QAnswers = [];
+
+        $("#submit").click(function () {
+            var _select = [];
+            var isCheck=0;
+            $(".checkdbtn").each(function () {
+                isCheck=1;
+                _select.push($(this).attr("data-value"));
+                //_QAnswers.push("{sid:"+$(this).attr("data-id")+",sresult:"+$(this).attr("data-value")+"}");
+            });
+            if(isCheck==0){
+                layer.open({ content: "请选择答案", time: 2 })
+                return;
+            }
+            var _QAnswer = { sid: $("#brand").attr("data-id"), sresult: _select.toString().replace(/\,/g, "^") };
+            _QAnswers.push(_QAnswer);
+            var count = '@list.Count';
+                layer.open({ type: 2 });
+                AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "CREATE", "点击提交按钮",  $("#brand").attr("data-id"), _select.toString().replace(/\,/g, ","));
+                if (count-1  < next) {
+                    //提交
+                    $.ajax({
+                        url: "/IO/Survey/AddSurvey",
+                        type: "post",
+                        data:{JsonStr: JSON.stringify(_QAnswers)},
+                        success: function (r) {
+
+                            layer.closeAll();
+                            if (!r.success) {
+                                layer.open({content: r.msg,time: 2});
+                            } else {
+                                //layer.open({
+                                //    content: r.msg,
+                                //    time: 2,
+                                //    end: function () {
+                                //        setTimeout(function () {
+
+                                //        }, 1000);
+                                //    }
+                                //});
+                                layer.open({
+                                    content: r.msg,
+                                    shadeClose: false,
+                                });
+                                setTimeout(function () {
+                                    layer.closeAll();
+                                    window.location.href = "/IO/Meeting/Interaction/" + $("#mid").val();
+                                }, 2000);
+                            }
+                        },
+                        error: function (r) {
+                            console.log(r.responseText);
+                        }
+                    });
+                    return;
+                }
+
+
+                var html="";
+                $.ajax({
+                    url: "/IO/Survey/Next",
+                    type: "post",
+                    data: { "mid": $("#mid").val() , "index": next },
+                    success: function (r) {
+                        var data=r.data[0];
+                        layer.closeAll();
+                        var title=data.stitle;
+                        title+=data.stype ==1?" (多选)":" (单选)";
+                        $("#brand").html(title);
+                        $("#brand").attr("data-id",data.sid );
+                        $("#brand").attr("data-value",data.stype )
+                        var ans=data.sanswer.split("|");
+                        for (var i = 0; i < ans.length; i++) {
+                            html+=" <li class=\"chioced clearfix\">\
+                                        <div class=\"checkbtn\" data-value=\""+ans[i]+"\"></div>\
+                                        <p>"+ans[i]+"</p>\
+                                    </li>";
+                        }
+                        $("#block").html(html);
+                        RegisterClick();
+                    },
+                    error: function (r) {
+                        console.log(r.responseText);
+                    }
+                });
+
+                if (count - 1 == next) {
+                    $("#submit").val("提 交");
+                }
+                next++;
+
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+input, select {
+    -webkit-appearance: none;
+}
+input::-webkit-input-placeholder {
+    color: #aabab9;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, "Microsoft YaHei";
+}
+
+h5 {
+    font-size: .26rem;
+    color: #5c7487;
+    font-weight: normal;
+}
+h6 {
+    font-size: .22rem;
+    color: #4a6983;
+    font-weight: normal;
+}
+p {
+    font-size: .28rem;
+    color: #666666;
+}
+
+
+/* overflow: hidden; */
+
+
+body .info {
+        width: 80%;
+        margin: 0 auto;
+        padding-top: 1rem;
+    }
+
+
+body .info h5 {
+            margin-top: .1rem;
+            font-weight: bolder;
+        }
+
+
+body .main {
+         margin-top: .3rem;
+    }
+
+
+body .main .title {
+            font-size: .26rem;
+            font-weight: bolder;
+        }
+
+
+body .main .comment {
+            font-size: .22rem;
+        }
+
+
+body .main p {
+            text-align: center;
+            color: #7e96aa;
+        }
+
+
+body .main h5 {
+            text-align: center;
+            margin-top: .2rem;
+            position: relative;
+        }
+
+
+body .main h5 img {
+                width: .4rem;
+                height: .4rem;
+                vertical-align: middle;
+                margin-right: .2rem;
+            }
+
+
+body .main h5 input {
+                width: 3.8rem;
+                height: .5rem;
+                -webkit-border-radius: 5px;
+                        border-radius: 5px;
+                padding: 0 .2rem;
+                background: #e4eeef;
+                border: 1px solid #bbc5c6;
+            }
+
+
+body .main h5 #conf {
+                width: 2.5rem;
+            }
+
+
+body .main h5 button {
+                display: inline-block;
+                width: 1.2rem;
+                height: .52rem;
+                vertical-align: bottom;
+                -webkit-border-radius: 3px;
+                        border-radius: 3px;
+                color: white;
+                background: #3399db;
+                border: none;
+            }
+
+
+body .main h5 select {
+                width: 4.25rem;
+                height: .5rem;
+                -webkit-border-radius: 5px;
+                        border-radius: 5px;
+                padding: 0 .2rem;
+                background: #e4eeef;
+                color: #666666;
+                border: 1px solid #bbc5c6;
+            }
+
+
+body .main h5 .iconfont {
+                position: absolute;
+                right: .9rem;
+                top: .1rem;
+                color: #3399db;
+            }
+
+
+body .main h5 .choose {
+                border: 1px solid grey;
+                -webkit-border-radius: 0;
+                        border-radius: 0;
+            }
+
+
+body .main h6 {
+            margin-top: .1rem;
+        }
+
+
+body .main h6 input {
+                margin-left: .8rem;
+                border: 1px solid #bbc5c6;
+                width: .3rem;
+                height: .3rem;
+                vertical-align: middle;
+                background: none;
+            }
+
+
+body .main h6 span label {
+                position: relative;
+                left: -0.3rem;
+                top: -0.02rem;
+                border-left: 2px solid;
+                border-bottom: 2px solid;
+                border-top: none;
+                border-right: none;
+                -webkit-border-image: -webkit-linear-gradient( to right, #6764ff, #23cfff)0 0 2 2;
+                        border-image: -webkit-linear-gradient( to right, #6764ff, #23cfff)0 0 2 2;
+                -moz-border-image: -moz-linear-gradient(to right, #6764ff, #23cfff)0 0 2 2;
+                     border-image: -moz-linear-gradient(to right, #6764ff, #23cfff)0 0 2 2;
+                -o-border-image: -o-linear-gradient( left, #6764ff, #23cfff)0 0 2 2;
+                   border-image: -webkit-gradient( linear, left top, right top, from(#6764ff), to(#23cfff))0 0 2 2;
+                   border-image: linear-gradient( to right, #6764ff, #23cfff)0 0 2 2;
+                display: inline-block;
+                width: .17rem;
+                height: .1rem;
+                -webkit-transform: rotate(-50deg);
+                   -moz-transform: rotate(-50deg);
+                    -ms-transform: rotate(-50deg);
+                     -o-transform: rotate(-50deg);
+                        transform: rotate(-50deg);
+                visibility: hidden;
+            }
+
+
+body .main h6 .choose:checked+label {
+                /* border: solid blue; */
+                visibility: visible;
+
+            }
+
+
+body .main h6 .content {
+                position: relative;
+                left: -0.2rem;
+            }
+
+
+body .main h6#l {
+            margin-top: .25rem;
+        }
+
+
+body .foot {
+        text-align: center;
+        padding: .2rem 0;
+    }
+
+
+body .foot img {
+            width: 1.8rem;
+            height: .6rem;
+
+        }

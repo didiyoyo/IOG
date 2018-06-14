@@ -1,0 +1,214 @@
+﻿@using Services.Models
+@{
+    Layout = null;
+    var meeting = ViewBag.Meeting as md_seminar_meeting_main;
+    var userInfo = ViewBag.UserInfo as UserInfo;
+    var meetingSign = ViewBag.MeetingSign as MeetingSign;
+    var isImport = (bool)ViewBag.IsImport;
+    var sfe = new sfe_register();
+    if (userInfo.statusCode == "Accepted")
+    {
+        sfe = ViewBag.Sfe as sfe_register;
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>IO在沃</title>
+    <link rel="stylesheet" href="/IO/Content/css/success.css">
+    <style>
+        /* 图片地址需要修改 */
+
+        body {
+            margin: 0;
+            background: url('/IO/Content/images/bg_notice@2x.jpg') no-repeat;
+            background-size: 100% 100%;
+        }
+
+        body {
+            background: url('/IO/Content/images/bg_notice@2x.jpg') no-repeat;
+            background-size: 100% 100%;
+        }
+
+        footer {
+            background: url('/IO/Content/images/footer_l.png') no-repeat;
+            background-size: 100% 100%;
+            width: 100%;
+            height: 1.5rem;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+        #confirm {
+            background: url('/IO/Content/images/Center@2x.png') no-repeat;
+            background-size: 100% 100%;
+        }
+    </style>
+    @if (!isImport && meeting.meetingmode == 3)
+    {
+        <style>
+        body {
+            margin: 0;
+            background: url('/IO/Content/images/qdbg.png') no-repeat;
+            background-size: 100% 100%;
+        }
+
+        @@media screen and(min - height: 800px) {
+            body {
+                background: url('/IO/Content/images/qdbg@2x.png') no-repeat;
+                background-size: 100% 100%;
+            }
+    }
+            section h3, section h4, section .doctor .r h5, section .doctor .r h6 {
+                color: #464d5e;
+            }
+            </style>
+    }
+</head>
+<body>
+    <header>
+        <img src="/IO/Content/images/head_logo@2x.png">
+    </header>
+    <section>
+        @if (!isImport && meeting.meetingmode == 3)
+        {
+            <h3 style="color:#337ab7;">@meeting.mtitle</h3>
+
+            <div class="doctor">
+                <div class='l'>
+                    <img src="@userInfo.avatar" class='doctorPic'>
+                    <!-- 认证医生的v 如果没有认证不需要此标签 -->
+                    @if (userInfo.statusCode == "Accepted")
+                {
+                        <img src="/IO/Content/images/v@2x.png" class='qualify'>
+                    }
+                </div>
+                <div class="r">
+                    @if (userInfo.statusCode == "Accepted" && sfe != null)
+                    {
+                        <h5 style="color:#337ab7;">@sfe.doc_name</h5>
+                        <h6 style="color:#337ab7;">@sfe.ins_name</h6>
+                    }
+                    else
+                    {
+                        <h5 style="color:#337ab7;">@userInfo.nickname</h5>
+                        <h6 style="color:#337ab7;">@userInfo.hospitalName</h6>
+                    }
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <h3>@meeting.mtitle</h3>
+
+            <div class="doctor">
+                <div class='l'>
+                    <img src="@userInfo.avatar" class='doctorPic'>
+                    <!-- 认证医生的v 如果没有认证不需要此标签 -->
+                    @if (userInfo.statusCode == "Accepted")
+                {
+                        <img src="/IO/Content/images/v@2x.png" class='qualify'>
+                    }
+                </div>
+                <div class="r">
+                    @if (userInfo.statusCode == "Accepted" && sfe != null)
+                    {
+                        <h5>@sfe.doc_name</h5>
+                        <h6>@sfe.ins_name</h6>
+                    }
+                    else
+                    {
+                        <h5>@userInfo.nickname</h5>
+                        <h6>@userInfo.hospitalName</h6>
+                    }
+
+                </div>
+            </div>
+        }
+
+
+        <!-- 红色和蓝色勾 -->
+        @*未导入的大型线下会议提示用户到人工处进行签到*@
+        @if (!isImport && meeting.meetingmode == 3)
+        {
+            <h4 class='respond' style="color: #d2622a; margin-top: 1rem;">请到签到处进行人工签到。</h4>
+        }
+        else
+        {
+            if (meetingSign.randominvitationcode != null)
+            {
+                <img src="/IO/Content/images/G@2x.png" alt="成功" id='success'>
+                <h4 class='respond'>恭喜您签到成功!</h4>
+                @*if (isImport && userInfo.statusCode.ToLower() == "accepted")
+                    {
+
+                    }
+                    else
+                    {
+                        <h5 class='respond'>邀请码:&nbsp;@meetingSign.randominvitationcode</h5>
+                    }*@
+            }
+            else
+            {
+                <img src="/IO/Content/images/G@2x.png" alt="成功" id='success'>
+                <h4 class='respond'>恭喜您签到成功!</h4>
+            }
+            //if (isImport && userInfo.statusCode.ToLower() == "accepted")
+            //{
+            <button id='confirm' onclick="javascript: location.href = '/IO/Meeting/MeetingInfo/@(ViewBag.id)';">我知道了</button>
+                @*}
+                    else
+                    {
+                        <button id='confirm' onclick="javascript: location.href = '/IO/Meeting/MeetingInfo/@(ViewBag.id)';">我知道了 <span id='time'>5S</span></button>
+                    }*@
+        }
+    </section>
+
+    <script src='/IO/Scripts/zepto.min.js'></script>
+    <script>
+        @*@if (!isImport && meeting.meetingmode == 3)
+        {
+
+        }
+        else
+        {
+            if (isImport && userInfo.statusCode.ToLower() == "accepted")
+            {
+
+            }
+            else
+            {
+            <text>
+            var done = false;
+                setTimeout(function(){
+                    let time = 5;
+                    var interval = setInterval(function(){
+                        if (time < 1)
+                        {
+                            if (!done)
+                            {
+                        $('#time').html('');
+                        $('#confirm').on('click', function(){
+
+                                })
+                        done = !done;
+                                clearInterval(interval);
+                            }
+                            location.href = "/IO/Meeting/MeetingInfo/@(ViewBag.id)";
+                            return false;
+                        }
+                        let left = time-- + 'S';
+                $('#time').html(left);
+                    }, 1000)
+                    }, 200)
+            </text>
+            }
+        }*@
+    </script>
+</body>
+</html>

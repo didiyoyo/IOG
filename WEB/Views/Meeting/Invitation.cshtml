@@ -1,0 +1,177 @@
+﻿@model Services.Models.md_seminar_meeting_main
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>会议日程</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1,user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/index.css">
+    <link rel="stylesheet prefetch" href="~/Content/css/photoswipe.css">
+    <link rel="stylesheet prefetch" href="~/Content/css/default-skin/default-skin.css">
+    <script src="~/Scripts/layer.mobile/layer.js"></script>
+    <style type="text/css">
+        .tabFix {
+            width: 50%;
+            position: fixed;
+            bottom: 5%;
+            left: 5%;
+        }
+
+            .tabFix > li {
+                float: left;
+            
+            }
+        .tabOne {
+            background: url('/IO/Content/images/btn-yy.png') no-repeat;
+            background-size: 100% 100%;
+            height: 30px;
+            width: 90px;
+            z-index:100000;
+        }
+        .tabTwo {
+            background: url('/IO/Content/images/btn_jj@2x.png') no-repeat;
+            background-size: 100% 100%;
+            height: 30px;
+            width: 90px;
+            z-index: 100000;
+        }
+                .tabFix > li > img {
+                    width: 14%;
+                    float:left;
+                    margin:5.4% 3% 0 23%;
+                }
+                .tabFix > li >p{
+                    float:left;
+                    color:#fff;
+                    line-height:48px;
+                }
+        .fixContent > img {
+            width: 100%;
+            height:100vh;
+        }
+        iframe {
+            border:none;
+            height:100vh;
+        }
+        .layui-m-layer0 .layui-m-layerchild {
+            width: 80%;
+        }
+
+    </style>
+</head>
+<body>
+    <input id="mid" type="hidden" value="@(Model.mid)" />
+    <section class="fix-main">
+        <div class="fixContent">
+            @if (Model.mhyrc_type == "0")
+            {
+                <img width="100%" src="@(System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DataPath"] + Model.mhyrc_img)" />
+            }
+            else
+            {
+                <iframe   style="display:none; width: 100%;height: auto; position:absolute; " src="@(Model.mhyrc_url)"></iframe>
+                <iframe id="ifs" style="width: 100%;height: auto; position:absolute;" src="@(Model.mhyrc_url)"></iframe>
+                if (Model.mid == 21)
+                {
+
+                    <audio style="display:none" id="car_audio" loop="loop" src="http://file.ih5.cn/v3/files/2121877/20170929/0ca73ad4.mp3" autoplay="autoplay" controls="controls"></audio>
+                    <script>
+                        
+                        audioAutoPlay('car_audio');
+                        function audioAutoPlay(id) {
+                            var audio = document.getElementById(id);
+                            audio.play();
+                            document.addEventListener("WeixinJSBridgeReady", function () {
+                                audio.play(); 
+                            }, false);
+                        }
+                    </script>
+                }
+
+            }
+
+            @*<img src="~/Content/images/rc@2x.png"  />*@
+        </div>
+        <ul class="tabFix">
+            <li class="tabOne" id="btnjoinMeeting">
+                @*<img class="preMeet" src="~/Content/images/icota.png"  />
+                <p>预约参会</p>*@
+            </li>
+            <li class="tabTwo" id="btndoctorInfo">
+                @*<img class="introduceMan" src="~/Content/images/icjsp.png" />
+                <p>讲者简介</p>*@
+            </li>
+        </ul>
+    </section>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script>
+        $().ready(function () {
+            //var fixHeight = $(".tabFix").height();
+            //var documentHeight = $(document).height();
+            //$(".fixContent").height(documentHeight - fixHeight);
+            //$("iframe").height(documentHeight - fixHeight);
+            $("#btnjoinMeeting").click(function () {
+                //layer.open({ type: 2, shadeClose: false });
+                layer.open({
+                    content: '您已预约成功。在会议开始前将接收到会议提醒消息',
+                    btn: 'OK',
+                  
+                    yes: function () {
+                        click_log($("#mid").val(), "参加会议", function () {
+                            $.ajax({
+                                url: "/IO/Meeting/JoinMeeting",
+                                type: "post",
+                                data: { "MId": $("#mid").val(), "State": 1 },
+                                success: function (r) {
+                                    layer.closeAll();
+                                    window.location.href = "/IO/Meeting/Index/1";
+                                },
+                                error: function (r) {
+                                    console.log(r.responseText);
+                                }
+                            });
+                        });
+                    }
+                });
+
+               
+                
+            });
+            $("#btndoctorInfo").click(function () {
+                layer.open({ type: 2, shadeClose:false});
+                click_log($("#mid").val(), "查看讲者", function () {
+                    layer.closeAll();
+                    window.location.href = "/IO/Meeting/doctorInfo/" + $("#mid").val();
+                });
+            });
+
+        });
+        function click_log(mid, type,callback) {
+            $.ajax({
+                url: "/IO/ClickLog/Click_Log",
+                type: "post",
+                data: { "mid": mid, "modelName": type },
+                success: function (r) {
+                    if(callback)
+                    {
+                        callback();
+                    }
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

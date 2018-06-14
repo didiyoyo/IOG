@@ -1,0 +1,122 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>提示</title>
+    <meta http-equiv="Content-Type" content="textml; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <script src="~/Scripts/jquery.min.js"></script>
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <style>
+      
+        body,html{
+            width:100%;
+           height:100%;
+        }
+
+        .indenty {   
+            background: url(/IO/Content/images/bg_notice@2x.jpg) no-repeat;
+            width: 100%;
+            /*height: 100%;*/
+            background-size: 100% 100%;
+            position:relative;
+        }
+        .imgPar{
+            padding-top:25%;
+        }
+        .pic {
+            width: 34%;
+            display: block;
+            margin: 0 auto;
+        }
+        #quebtn {
+            text-align:center;
+            width: 40%;
+            background: url(/IO/Content/images/Center@2x.png) no-repeat;
+            background-size: 100% 100%;
+            color: #fff;
+            margin: 10% auto;
+            line-height:42px;
+        }
+        .content div {
+            text-align: center;
+            color: #fff;
+        }
+        .fontSize-l {
+            font-size:30px;
+            margin-top:10%;
+        }
+        .fontSize-s {
+            font-size:16px;
+            margin-top:5%;
+        }
+        .person {
+            position: fixed;
+            left: 4%;
+            top: 2%;
+        }
+            .person img {
+                width:36px;
+            }
+
+            .person span {
+                color:#c45841;
+                font-weight:700;
+            }
+    </style>
+</head>
+<body>
+    <div class="indenty">
+        <div class="imgPar">
+            <img class="pic" src="~/Content/images/G@2x.png" />
+        </div>
+        <div class="content">
+
+            <div class="fontSize-l">恭喜您认证成功！</div>
+            @*<div class="fontSize-s">一旦您的信息被认证，我们将通知您！</div>*@
+        </div>
+
+        <div id="quebtn" onclick="javascript: location.href = '@(ViewBag.url)/wechat/home';">我知道了<spn id="time">5</spn>s</div>
+    </div>
+    @*<img src="~/Content/images/footer_l.png" alt="wrapper" class="footer"  onclick="location.href='@(ViewBag.url)/wechat/home'" />*@
+    <div class="person" onclick="location.href='@(ViewBag.url)/wechat/home'">
+        <img src="~/Content/images/follower@2x.png" alt="follower@2x.png" />
+        <span>个人中心</span>
+    </div>
+
+    <script>
+        var time =5;
+        $(function () {
+
+            WriteLog('', '', "VIEW", "浏览");
+            var bodyHeight = $("body").height();
+            $(".indenty").height(bodyHeight);
+            var interval = setInterval(function () {
+                time--;
+                if (time == 0) {
+                    clearInterval(interval);
+                    location.href = '@(ViewBag.url)/wechat/home';
+                    //location.href = '@(ViewBag.url)/wechat/home';
+                }
+                $("#time").html(time);
+            }, 1000);
+        });
+       //有这些提示语
+        tipsStr = ['您已注册成功!','您已认证成功！']
+    </script>
+</body>
+</html>

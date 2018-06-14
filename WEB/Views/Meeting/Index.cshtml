@@ -1,0 +1,546 @@
+﻿@model IEnumerable<Services.Models.md_seminar_meeting_main>
+@{
+    ViewBag.Title = "我的会议";
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>我的会议</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+    <style>
+            .newMeet {
+                width: 100%;
+                background-size: 100% 100%;
+
+            }
+
+            .tabSecond > img {
+                /*float: left;*/
+                /*width: 50%;*/
+                position: absolute;
+                width: 3.4rem;
+                /*top:20%;*/
+                top:2.37rem;
+            }
+
+            .hTitle {
+                width: 100%;
+                display: table;
+                height: 30vh;
+            }
+
+            h1 {
+                display: block;
+                width: 100%;
+                vertical-align: middle;
+                text-align: center;
+                font-size: 2.5rem;
+                color: #fff;
+            }
+
+            .oneNew {
+                width: 90%;
+                margin: 0 auto;
+                position: relative;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 11px;
+                padding-top: .4rem;
+            }
+                .oneNew:not(:first-child) {
+                    padding-top:8%;
+                }
+
+                .oneNew:nth-child(odd) {
+                    /*text-align: right;*/
+                }
+
+                .oneNew:nth-child(even) .enterMeet, .oneNew:nth-child(even) .travelInformation {
+                    float: left;
+                }
+
+                .odd .oneNew:last-of-type {
+                    padding-bottom: 120px;
+                    border:none;
+                }
+            .oneNew:last-of-type {
+                /*border: none;*/
+            }
+        .enterMeet, .travelInformation, .speechInfo {
+            
+            width: calc(148px*0.6);
+            height: calc(44px*0.6);
+            margin: 10px 0;
+            
+            text-align: center;
+            line-height: 36px;
+            font-size: 14px;
+            float: left;
+        }
+        .enterMeet {
+            background: url(/IO/Content/images/jrhi.png) no-repeat;
+            background-size: 100% 100%;
+        }
+        .travelInformation {
+            background: url(/IO/Content/images/HYXC.png) no-repeat;
+            background-size: 100% 100%;
+            margin-left: .2rem;
+        }
+        .speechInfo {
+            background: url(/IO/Content/images/speechInfo@2x.png) no-repeat;
+            background-size: 100% 100%;
+            margin-left: .2rem;
+        }
+            .mainTab {
+                overflow-y: scroll;
+                display: none;
+                width: 100%;
+                /*height:75vh;*/
+                height: calc(100vh - 150px);
+            }
+            .tabSecond img{
+                /*position: relative;*/
+                z-index: 10;
+            }
+            .s {
+                color: #768390 !important;
+            }
+        .enterMeet, .travelInformation {
+            color: #4866b0 !important;
+        }
+            .tOne {
+                /*transform: translateY(75%);*/
+                right:55%;
+            }
+            .tTwo {
+                /*transform:translateY(7%);*/
+                left:45%;
+            }
+            .tHird {
+                display:none;
+            }
+            .wrapper {
+                position: absolute;
+                top:14%;
+                width:100%;
+            }
+            .hTitle {
+                position:relative;
+            }
+            .hTitle h1 {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+                .hTitle .tips {
+                    position: absolute;
+                    top: 25%;
+                    transform: translateY(-50%);
+                    color: #fff;
+                    font-size: 1.5rem;
+                    text-align: center;
+                    width: 100%;
+                }
+
+            .tabSecond {
+                /*position:relative;*/
+                /*height:25vh;*/
+                height:150px;
+            }
+            .tabSecond .wrapper_01 {
+                position: absolute;
+                width: 100%;
+                top: -130%;
+                z-index: -1;
+            }
+            .bg {
+                position:absolute;
+                z-index:-1;
+                height:100vh;
+                width:100%;
+                top:-10%;
+            }
+            .mainTab {
+                /*background: url(/IO/Content/images/wrapper_02.jpg) no-repeat;*/
+                background-size: contain;
+                box-sizing:border-box;
+                /*padding-top:20px;*/
+                /*min-height: 60vh;*/
+            }
+
+            .tabMaind {
+                position:relative;
+                background-image:url(/IO/Content/images/bg@2x_l.png);
+                background-repeat:no-repeat;
+                background-size:cover;
+                height:100vh;
+
+                box-sizing: unset;
+                padding-bottom: .2rem;
+
+            }
+
+            .arrow-down {
+                background-image:url(/IO/Content/images/tips_down@2x.png);
+                width:15px;
+                height:15px;
+                background-size:15px 15px;
+                position:fixed;
+                bottom:5%;
+                left:15%;
+            }
+
+            .tabMaind {
+                background-image: url(/IO/Content/images/index_bg.png);
+            }
+            @@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio:3) {
+                .tabSecond > img {
+                    top:2.58rem;
+                }
+                .tabMaind{
+                    background-size:100% 100%;
+                }
+            }
+
+        #clickBtn {
+            position: absolute;
+            bottom: .2rem;
+            right: .1rem;
+            width: 1.8rem;
+            height: 1rem;
+        }
+
+        .footer {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <img src="/IO/Content/images/bg@2x.png" class="bg" />
+    @*<img src="/IO/Content/images/xb1@2x.png" class="left-i" />
+        <img src="/IO/Content/images/xb2@2x.png" class="bottom-i" />*@
+    <section class="newMeet">
+        @*<div class="hTitle">
+                <div class="tips">2017年（第八届）中国施贵宝制药论坛</div>
+               <h1>第一届全国顶端人才</br>培训研讨会</h1>
+            </div>*@
+        <div class="tabMaind">
+            <div class="tabSecond clearfix">
+                @*<img src="/IO/Content/images/wrapper_01.png" alt="wrapper" class="wrapper_01" />*@
+                <img class="tOne" src="~/Content/images/open_tab_on.png" />
+                <img class="tTwo" src="~/Content/images/histroy_tab_off.png" />
+                <img class="tHird" src="/IO/Content/images/tab_03.png" />
+            </div>
+            @if ((@ViewBag.NOTOpen).Count != 0)
+            {
+                <div id="one" class="mainTab">
+                    @foreach (var item in ViewBag.NOTOpen)
+                    {
+                        <div class="oneNew clearfix">
+                            <div onclick="JumpToMeetingInfo(@item.Meeting.mid)">
+                                <p class="meet-title s">@item.Meeting.mtitle</p>
+
+                                <div @*class="meet-new"*@>
+                                    <p class="s" style="font-size:14px;">会议开始时间:<span>@Convert.ToDateTime(@item.Meeting.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                    <p class="s" style="font-size:14px;">会议结束时间:<span>@Convert.ToDateTime(@item.Meeting.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                    <p class="s" style="font-size:14px;">会议地点:@item.Meeting.msite</p>
+                                </div>
+                            </div>
+                            <p class="enterMeet" onclick="Jump(@item.Meeting.mid)"></p>
+                            @*<p class="travelInformation" onclick="travelInformation(@item.Meeting.mid)"></p>*@
+                            @if (!string.IsNullOrEmpty(item.Meeting.doctorimg) || !string.IsNullOrEmpty(item.Meeting.doctorurl))
+                            {
+                                if (item.Meeting.doctortype == 1 || item.Meeting.doctortype == 2 || item.Meeting.doctortype == null)
+                                {
+                                    <p class="speechInfo" onclick="speechInfo(@item.Meeting.mid)"></p>
+                                }
+                                else
+                                {
+                                    <p class="speechInfo" onclick="speechInfoToPdf(@item.Meeting.mid)"></p>
+                                }
+
+                            }
+
+                            @if ((bool)item.IsDisplayDoctorSchedule)
+                            {
+                                <p class="travelInformation" onclick="travelInformation(@item.Meeting.mid)"></p>
+                            }
+                        </div>
+                    }
+                    <img src="/IO/Content/images/footer_l.png" alt="wrapper" class="footer" />
+
+                </div>
+            }
+            else
+            {
+                <div id="one" class="mainTab">
+                    <div style="line-height:200px; color:#a9b6c7; text-align:center; font-size:20px; font-weight:bold;">
+                        您当前暂时没有会议
+                    </div>
+                </div>
+                <img src="/IO/Content/images/footer_l.png" alt="wrapper" class="footer" />
+
+            }
+
+
+            @if ((@ViewBag.Open).Count != 0)
+            {
+                <div id="two" class="mainTab">
+
+                    @foreach (var item in ViewBag.Open)
+                    {
+                        <div class="oneNew clearfix">
+                            <div onclick="JumpToMeetingInfo(@item.Meeting.mid)">
+                                <p class="meet-title s">@item.Meeting.mtitle</p>
+
+                                <div @*class="meet-new"*@>
+                                    <p class="s" style="font-size:14px;">会议开始时间:<span>@Convert.ToDateTime(@item.Meeting.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                    <p class="s" style="font-size:14px;">会议结束时间:<span>@Convert.ToDateTime(@item.Meeting.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                                    <p class="s" style="font-size:14px;">地点:@item.Meeting.msite</p>
+                                </div>
+                            </div>
+
+                            <p class="enterMeet" onclick="Jump(@item.Meeting.mid)"></p>
+                            @if (!string.IsNullOrEmpty(item.Meeting.doctorimg) || !string.IsNullOrEmpty(item.Meeting.doctorurl))
+                            {
+                                if (item.Meeting.doctortype == 1 || item.Meeting.doctortype == 2 || item.Meeting.doctortype == null)
+                                {
+                                    <p class="speechInfo" onclick="speechInfo(@item.Meeting.mid)"></p>
+                                }
+                                else
+                                {
+                                    <p class="speechInfo" onclick="speechInfoToPdf(@item.Meeting.mid)"></p>
+                                }
+                            }
+                            @if ((bool)item.IsDisplayDoctorSchedule)
+                            {
+                                <p class="travelInformation" onclick="travelInformation(@item.Meeting.mid)"></p>
+                            }
+                        </div>
+                    }
+                    <img src="/IO/Content/images/footer_l.png" alt="wrapper" class="footer" onclick="location.href='@(ViewBag.url)/wechat/home'" />
+                    <img src="/IO/Content/images/footer_l.png" alt="wrapper" class="footer" />
+
+                </div>
+            }
+            else
+            {
+                <div id="two" class="mainTab">
+                    <div style="line-height:200px; color:#a9b6c7; text-align:center; font-size:20px; font-weight:bold; padding-top: .1rem;">
+                        您当前暂时没有会议
+                    </div>
+                </div>
+                <img src="/IO/Content/images/footer_l.png" alt="wrapper" class="footer" />
+
+            }
+
+        </div>
+
+    </section>
+
+    <div id="clickBtn" onclick="location.href='@(ViewBag.url)/wechat/home'" ></div>
+    <div class="arrow-down"></div>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/layer.mobile/layer.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script>
+        //var documentHeight = $("body").height();
+        //$(".newMeet").height(documentHeight);
+        //var s = $(".hTitle").height();
+        //var tab = $(".tabSecond ").height();
+        //$(".tabMaind").height(documentHeight - parseInt(s));
+        //$(".mainTab").height($(".tabMaind").height() - tab - 60);
+        //tab切换
+
+        var calculate_size = function () {
+            var BASE_FONT_SIZE = 100,
+                docEl = document.documentElement,
+                clientWidth = docEl.clientWidth;
+            if (clientWidth) {
+                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+            }
+        };
+        // Abort if browser does not support addEventListener
+        if (document.addEventListener) {
+            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+            window.addEventListener(resizeEvt, calculate_size, false);
+            document.addEventListener('DOMContentLoaded', calculate_size, false);
+            calculate_size();
+        }
+
+
+        $("#one").css("display", "block");
+        $(".tOne").click(function () {
+            $(".mainTab").css("display", "none");
+            $("#one").css("display", "block");
+            $(this).attr("src", "/IO/Content/images/open_tab_on.png");
+            $(".tHird").attr("src", "/IO/Content/images/tab_05.png");
+            $(".tTwo").attr("src", "/IO/Content/images/histroy_tab_off.png");
+
+        });
+        $(".tTwo").click(function () {
+            $(this).attr("src", "/IO/Content/images/history_tab_on.png");
+            $(".mainTab").css("display", "none");
+            $("#two").css("display", "block");
+            $(".tOne").attr("src", "/IO/Content/images/open_tab_off.png");
+            $(".tHird").attr("src", "/IO/Content/images/tab_03.png");
+
+        });
+        $(".tHird").click(function () {
+            $(".mainTab").css("display", "none");
+            $("#three").css("display", "block");
+            $(this).attr("src", "/IO/Content/images/tab_03_on.png");
+            $(".tOne").attr("src", "/IO/Content/images/tab_01.png");
+            $(".tTwo").attr("src", "/IO/Content/images/tab_02.png");
+
+        });
+        function click_log(mid, type, callback) {
+            $.ajax({
+                url: "/IO/ClickLog/Click_Log",
+                type: "post",
+                data: { "mid": mid, "modelName": type },
+                success: function (r) {
+                    if (callback) {
+                        callback();
+                    }
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+
+        function Jump(id) {
+            click_log(id, "会议");
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "浏览会议", id, '');
+            window.location.href = "/IO/Meeting/MeetingInfo/" + id;
+        }
+
+        function JumpToMeetingInfo(id) {
+            click_log(id, "会议详情");
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "会议详情", id, '');
+            window.location.href = "/IO/Meeting/MeetingInfo/" + id;
+        }
+
+        function travelInformation(id) {
+            click_log(id, "查看行程信息");
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "查看行程信息", id, '');
+            window.location.href = "/IO/Meeting/DoctorSchedule?mid=" + id;
+        }
+
+        function speechInfo(id) {
+            layer.open({ type: 2, shadeClose: false });
+            click_log(id, "查看讲者", function () {
+                layer.closeAll();
+                window.location.href = "/IO/Meeting/doctorInfo/" + id;
+            });
+        }
+        function speechInfoToPdf(id) {
+            layer.open({ type: 2, shadeClose: false });
+            click_log(id, "查看讲者", function () {
+                $.ajax({
+                    url: "/IO/Meeting/GetDoctorInfo/" + id,
+                    type: "post",
+                    success: function (r) {
+                        if (r) {
+                            layer.closeAll();
+                            window.location.href = r;
+                        }
+                    },
+                    error: function (r) {
+                        layer.closeAll();
+                        console.log(r.responseText);
+                    }
+                });
+            });
+        }
+        $(function () {
+            var index = "@(ViewBag.tag)";
+            switch (index) {
+                case "1":
+                    $(".tOne").click();
+                    break;
+                case "2":
+                    $(".tTwo").click();
+                    break;
+
+            }
+        });
+        function arrowShow() {
+            if ($(document).height() - $(document).scrollTop() - window.innerHeight < 100) {
+                if (!$(".arrow-down").is(":hidden")) {
+                    $(".arrow-down").hide(500);
+                }
+            }
+            else {
+                $(".arrow-down").show(500);
+            }
+        };
+
+        function oddShow() {
+            var mainContainer = $(".mainTab");
+            for (var i = 0; i < mainContainer.length; i++) {
+                var length =$( mainContainer[i]).children(".oneNew").length;
+                if (length / 2 !== 0 && length > 1) {
+                    $(mainContainer[i]).addClass('odd')
+                }
+            }
+
+        }
+        function addWrap() {
+            var mainContainer = $(".mainTab");
+            for (var i = 0; i < mainContainer.length; i++){
+                $(mainContainer[i]).children('.oneNew:')
+
+            }
+
+        }
+        function fitChrome() {
+            if (!isWeChatBrowser()) {
+                $('.tOne').css('top', '17.5%')
+                $('.tTwo').css('top', '17.5%')
+
+
+            }
+        }
+
+        function isWeChatBrowser() {
+            var ua = window.navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+                return true
+            } else {
+                return false
+            }
+
+        }
+
+
+
+
+        $(document).ready(function () {
+            arrowShow();
+            //fitChrome();
+            //oddShow();
+        })
+        $(document).scroll(function () {
+            arrowShow();
+        });
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+﻿@{
+    Layout = null;
+
+}
+@model Services.Models.md_seminar_meeting_main
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>验证</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <style type="text/css">
+       
+        body, html {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tip {
+            background: url(/IO/Content/images/bg@2x.png) no-repeat;
+            width: 100%;
+            background-size: 100% 100%;
+            height:100vh;
+            
+        }
+
+        .tipNew {
+            padding-top: 38%;
+        }
+
+        h5 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .tipNew > p {
+            color: #fff;
+            font-size: 16px;
+            width: 79%;
+            margin: 5% auto 11%;
+            text-indent: 7%;
+        }
+
+        .tipNum {
+            width: 62%;
+            height: 4%;
+            border: none;
+            border-radius: 15px;
+            margin: 0 auto;
+            display: block;
+            padding-left: 4%;
+        }
+
+        .btnSure {
+            background: url(/IO/Content/images/vote.png) no-repeat;
+            background-size: 100% 100%;
+            color: rgb(45,93,165);
+            font-size: 16px;
+            width: 36%;
+            height: 40px;
+            border: none;
+            margin: 30% auto 0;
+            display: block;
+        }
+        .form-group{
+				width: 90%;
+    			margin: 0 auto;
+			}
+
+    </style>
+</head>
+<body>
+    <section class="tip">
+        <div class="tipNew">
+            <h5>提示:</h5>
+            <p>您的注册信息暂未认证通过,如需参加会议,请输入4位会议随机邀请码:</p>
+        </div>
+        <div class="form-group">
+            <input type="text" placeholder="请输入会议随机邀请码" class="tipNum form-control" id="code" />
+        </div>
+
+        <input type="button" class="btnSure" value="确认" onclick="go()" />
+    </section>
+
+    <script src="/IO/Scripts/jquery.min.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <script>
+
+        $(function () {
+            WriteLog('@(Model.mid)', '', "VIEW", "浏览");
+            var documentHeight = $("body").height();
+            $(".tip").height(documentHeight);
+            //$(".meet-list li").on("click", function () {
+
+            //    location.href = "metdetail.html";
+            //    // $(this).css("background","red");
+            //})
+        })
+        function go() {
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击确认按钮", '@Model.mid', '');
+        if ($("#code").val() == '@(Model.InvitationCode)') {
+            location.href = '/IO/Meeting/MeetingSchedule/@(Model.mid)';
+        }
+        else {
+            alert("邀请码错误！");
+        }
+    }
+    </script>
+
+</body>
+
+</html>

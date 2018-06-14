@@ -1,0 +1,37 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>提示</title>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <script>
+        $().ready(function () {
+            WriteLog('', '', "VIEW", "浏览");
+            init();
+        })
+        function init() {
+            var bounceHeight = $(".bounce").height();
+            var bounceWidth = $(".bounce").width();
+            $(".bounce").css("marginTop", -bounceHeight);
+        }
+    </script>
+</head>
+<body style="background:#ccc;">
+    <div class="bounce" style="width: 80%;padding: 4% 15px;background: #fff;border:1px solid #ccc;border-radius: 6px;position: absolute;top: 50%;left: 46%;margin-left: -40%;text-align: center;">
+        <p>提示</p>
+        <div class="b-news" style="width: 90%;margin: 0 auto;">@(ViewBag.message)</div>
+        <input class="btn sure" type="button" value="确认" style="background: #3f488b;width: 40%;color: #fff;" onclick="WeixinJSBridge.call('closeWindow');" />
+
+    </div>
+</body>
+</html>

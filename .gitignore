@@ -1,0 +1,9 @@
+/.vs
+/packages
+/Services/obj
+/Services/Services.csproj.user
+/Services/bin
+/WEB/WEB.csproj.user
+/WEB/bin
+/WEB/Log
+/WEB/obj

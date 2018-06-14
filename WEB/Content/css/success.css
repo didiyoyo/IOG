@@ -1,0 +1,158 @@
+input, select {
+    -webkit-appearance: none;
+}
+input::-webkit-input-placeholder {
+    color: #aabab9;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, "Microsoft YaHei";
+}
+
+h2 {
+    font-size: .4rem;
+}
+h3 {
+    font-size: .3rem;
+}
+h4 {
+    font-size: .26rem;
+}
+h5 {
+    font-size: .22rem;
+    color: #5c7487;
+    font-weight: normal;
+}
+h6 {
+    font-size: .18rem;
+    color: #4a6983;
+    font-weight: normal;
+}
+p {
+    font-size: .2rem;
+    color: #666666;
+}
+
+html {
+    height: 100%;
+}
+body {
+    overflow: hidden; 
+}
+
+
+header img {
+        height: 2rem;
+    }
+
+
+section h3, section h4 {
+        color: white;
+        text-align: center;
+        margin-bottom: .1rem;
+    }
+
+
+section h3 {
+        font-size: .5rem;
+    }
+
+
+section h4 {
+        font-size: .35rem;
+        font-weight: normal;
+        margin-bottom: .02rem;
+    }
+
+
+section .doctor {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -webkit-justify-content: center;
+           -moz-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        margin-top: .6rem;
+        margin-bottom: .4rem;
+    }
+
+
+section .doctor .l {
+            position: relative;
+        }
+
+
+section .doctor .r {
+            margin-left: .2rem;
+        }
+
+
+section .doctor .r h5, section .doctor .r h6 {
+                color: white;
+                font-weight: normal;
+            }
+
+
+section .doctor .r h5 {
+                margin-top: .1rem;
+                font-size: .3rem;
+            }
+
+
+section .doctor .r h6 {
+                margin-top: .02rem;
+                font-size: .26rem;
+            }
+
+
+section .doctor .doctorPic {
+            width: 1rem;
+            border: 1px solid #12cff0;
+            -webkit-border-radius: 50%;
+                    border-radius: 50%;
+            overflow: hidden;
+        }
+
+
+section .doctor .qualify {
+            width: .3rem;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+
+section .respond {
+        color: #133456;
+        text-align: center;
+    }
+
+
+section img {
+        display: block;
+    }
+
+
+section #success {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin: 0 auto .4rem;
+    }
+
+
+section #confirm {
+        display: block;
+        width: 2.2rem;
+        height: .7rem;
+        border: none;
+        margin: .5rem auto 0;
+        color: whitesmoke;
+        font-size: .26rem;
+    }

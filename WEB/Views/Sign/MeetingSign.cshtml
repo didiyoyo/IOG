@@ -1,0 +1,98 @@
+﻿@{
+    Layout = null;
+    Services.Models.md_seminar_meeting_main meeting = ViewBag.meeting;
+    Services.Models.UserInfo userInfo = ViewBag.userInfo;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会议签到</title>
+    <link rel="stylesheet" href="/IO/Content/css/reg.css">
+    <style>
+        /* 图片地址需要修改 */
+        body {
+            background: url('/IO/Content/images/bg@2x.png') no-repeat;
+            background-size: 100% 100%;
+            width: 100%;
+        }
+        /* body::before {
+            content: ' ';
+            position: fixed;
+            z-index: -1;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: url('./images/bg@2x.png') center 0 no-repeat;
+            background-size: cover;
+        } */
+        div.body {
+            background: url('/IO/Content/images/qhbg@2x.png') no-repeat;
+            background-size: 100% 100%;
+            width: 100%;
+            /* margin-top: 2rem; */
+        }
+    </style>
+</head>
+<body>
+    <input type="hidden" id="id" value="@(meeting.mid)" />
+    <input type="hidden" id="statusCode" value="@(userInfo.statusCode)" />
+    <div class='header'>
+        <div class='headerTitle'>@(meeting.mtitle)</div>
+    </div>
+    <div class="body">
+        <div class="info">
+            <h5>开始时间：</h5>
+            <h6>@(meeting.mbegintime.Value.ToString("yyyy年MM月dd日 HH:mm"))</h6>
+
+            <h5>结束时间：</h5>
+            <h6>@(meeting.mendtime.Value.ToString("yyyy年MM月dd日 HH:mm"))</h6>
+
+
+            <h5>会议地点：</h5>
+            <h6>@(meeting.msite)</h6>
+        </div>
+        <div class="personal">
+            <h5>请确认如下信息</h5>
+            <p><img src='/IO/Content/images/mz@2x.png'>姓名：@(userInfo.nickname)</p>
+            <p><img src='/IO/Content/images/follow@2x.png'>医院：@(userInfo.hospitalName)</p>
+            <p><img src='/IO/Content/images/comments@2x.png'>科室：@(userInfo.department)</p>
+            <p><img src='/IO/Content/images/aboutcopy@2x.png'>职位：@(userInfo.professionalTitle)</p>
+            @*@if (userInfo.statusCode == "Registed"|| userInfo.statusCode.ToLower() == "undetermined")
+                {
+                    <p><img src='/IO/Content/images/invite_code@2x.png'><input type="text" id="invitationCode" placeholder="请输入邀请码" /></p>
+                }*@
+        </div>
+
+
+        <div class="button">
+            <img src="/IO/Content/images/commit@2x.png" onclick="sign()">
+        </div>
+    </div>
+    <script src='/IO/Scripts/zepto.min.js'></script>
+    <script src="/IO/Scripts/layer.mobile/layer.js"></script>
+    <script>
+        function sign() {
+            var url = '/IO/Data/Sign?id=' + $("#id").val();
+            //if ($('#statusCode').val() == 'Registed' || $('#statusCode').val() == 'Undetermined') {
+            //    url += '&invitationCode=' + $('#invitationCode').val();
+            //}
+            $.post(url, null, function (response) {
+                if (response.success) {
+                    //alert("签到成功！");
+                    location.href = "/IO/Sign/Success/" + $("#id").val();
+                }
+                else {
+                    layer.open({
+                        content: response.message
+                        , btn: 'OK'
+                    });
+                }
+            }, "json");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,478 @@
+﻿@model IEnumerable<Services.Models.md_seminar_meeting_detail>
+@{
+    ViewBag.Title = "资料列表";
+    string path = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DataPath"].ToString();
+    string url = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["userinfourl"].ToString();
+    ViewBag.url = url;
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>会议资料</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+
+    <style>
+        .checkPic {
+            float: left;
+            background: url('/IO/Content/images/quan1.png') no-repeat;
+            width: .5rem;
+            height: .5rem;
+            background-size: 100% 100%;
+        }
+
+        .checkdPic {
+            float: left;
+            background: url('/IO/Content/images/quan2.png') no-repeat;
+            width: .5rem;
+            height: .5rem;
+            background-size: 100% 100%;
+        }
+
+        .hrefUrl {
+            float: left;
+            width: 90%;
+            margin-left: 2%;
+            color: #fff;
+        }
+
+        .vote_list > li {
+            display: flex;
+            -webkit-display: flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        .bounceEmail {
+            width: 82%;
+            /*height: 22%;*/
+            border-radius: 8px;
+            position: absolute;
+            top: 42%;
+            left: 50%;
+            margin-left: -41%;
+            margin-top: -58px;
+            background: #fff;
+            z-index: 66;
+        }
+
+        .eMail {
+            margin: 11% auto 0;
+            display: block;
+            width: 92%;
+        }
+
+        .btnd {
+            border-top: 1px solid #ccc;
+            margin-top: 9%;
+        }
+
+        .btnSend {
+            width: 50%;
+            float: left;
+            text-align: center;
+            height: 28px;
+            line-height: 28px;
+            color: rgb(35,126,210);
+        }
+
+        .btnCancle {
+            width: 49%;
+            float: left;
+            border-left: 1px solid #ccc;
+            text-align: center;
+            height: 28px;
+            line-height: 28px;
+        }
+
+        .display {
+            display: none;
+        }
+
+        .aSend {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: rgb(35,126,210);
+            background: url('/IO/Content/images/quan.png') no-repeat;
+            padding: 2% 3%;
+            background-size: 100% 100%;
+            font-weight: bold;
+        }
+
+        .vote_list > li {
+            padding: 5% 3% !important;
+        }
+
+        .downPic {
+            width: 8%;
+            float: left;
+        }
+
+        .downAll {
+            width: 21%;
+            position: absolute;
+            top: 22%;
+            right: 6%;
+            height: 1.6rem;
+            background-image: url(/IO/Content/images/btn-l-dowload.png);
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+
+
+        .bounceBack {
+            width: 100%;
+            background: #000;
+            opacity: 0.6;
+            filter: alpha(opacity==60);
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .choice-first {
+            padding: 3% 1% !important;
+        }
+
+        .close1 {
+            position: absolute;
+            top: -5%;
+            right: -2%;
+            color: #fff;
+            border: 2px solid #fff;
+            font-size: 18px;
+            border-radius: 74px;
+            background: rgb(119,119,119);
+            padding: 1px 9px;
+        }
+
+        .file-title {
+            color: #fff;
+        }
+
+        .footer {
+            position: absolute;
+            right: 0;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .vote_list {
+            overflow: scroll;
+        }
+
+        .cBack {
+            background: url(/IO/Content/images/Group@2x.png) no-repeat;
+            background-size: 100% 100%;
+            width: 85%;
+            padding: 3%;
+            margin: 0 auto;
+        }
+
+        .list-wrapper {
+            width: 100%;
+            /*margin: 0 auto;*/
+            height: 85vh;
+            /*overflow: hidden;*/
+            /*overflow-y: scroll;*/
+            background-image: url(/IO/Content//images/qhbg@2x.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            padding-top: 25vh;
+        }
+
+        .vote_list {
+            height: 50vh;
+        }
+
+
+        /* 弹框样式 */
+        .modal-dialog {
+            top: 35%;
+        }
+
+        .modal-content {
+            overflow: hidden;
+            border-radius: .4rem;
+            background: linear-gradient(to bottom, #afe5ef, #40939d);
+            border: none;
+        }
+
+        .modal-header {
+            background: #4c6f73;
+            height: .3rem;
+            line-height: .01rem;
+            border: none;
+        }
+
+            .modal-header p {
+                text-align: center;
+                color: white;
+                font-weight: bolder;
+            }
+
+        .modal-body {
+            border: none;
+            padding: 20px 10px;
+        }
+
+            .modal-body button {
+                display: inline-block;
+                width: 49%;
+                background: #dae8f2;
+                height: 1rem;
+                color: #d7632f;
+                font-size: .28rem;
+                font-weight: bolder;
+                border-radius: 3px;
+                border: 1px solid #456a70;
+                box-shadow: #456a70 0px 0px 5px;
+            }
+
+        #email input {
+            display: block;
+            width: 100%;
+            height: 1rem;
+            margin: 0 auto;
+            margin-bottom: .2rem;
+            border-radius: 2px;
+            background: #dbe7f3;
+            font-size: .3rem;
+        }
+    </style>
+</head>
+<body>
+    @*<img src="/IO/Content/images/xb1@2x.png" class="left-i" />
+        <img src="/IO/Content/images/xb2@2x.png" class="bottom-i" />*@
+    <section class="meet-interd">
+        <div class="meet-header">
+            <h1 class="sed-title">@ViewBag.mTitle</h1>
+        </div>
+        <div class="list-wrapper">
+            <div class="vote_list">
+                @foreach (var item in Model)
+                {
+                    <div class="op-back datadown" data-did="@item.did" data-mid="@item.did" data-check="false" data-name="@item.dname" data-url="@item.dcontent">
+                        <div class="cBack clearfix">
+                            <a class="hrefUrl" target="_blank" href="javascript:void(0)" id="down">
+                                <p class="file-title">@item.dname</p>
+                            </a>
+                            <img src="/IO/Content/images/VectorSmartObject@2x.png" class="downPic" data-id="@item.did" data-check="false" data-name="@item.dname" data-url="@item.dcontent" />
+                        </div>
+                    </div>
+
+                }
+                @*<img src="/IO/Content/images/footer_l.png" alt="wrapper" class="footer" onclick="location.href='@(System.Web.Configuration.WebConfigurationManager.ConnectionStrings["url"].ToString())/portal/wechat/user'" />*@
+            </div>
+        </div>
+
+
+
+
+        <div class="modal fade" id="select">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p>请选择查看方式</p>
+                    </div>
+                    <div class="modal-body">
+                        <button id="downphone" onclick="downphone()">下载到手机</button>
+                        <button id="sendonetoemail">发送到邮件</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="downAll">
+        </div>
+
+        <div class="modal fade" id="email">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <input type="hidden" id="mail" value="@ViewBag.Email" />
+                        <input type="text" name="name" id="nowmail" value="@ViewBag.Email" />
+                        <button class="btnSend">发送</button>
+                        <button onclick="UpdateEmail()">修改邮箱</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <div class="bounceBack"></div>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/layer.mobile/layer.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <script>
+        var ip = returnCitySN["cip"]
+        var calculate_size = function () {
+            var BASE_FONT_SIZE = 100,
+                docEl = document.documentElement,
+                clientWidth = docEl.clientWidth;
+            if (clientWidth) {
+                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+            }
+        };
+        if (document.addEventListener) {
+            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+            window.addEventListener(resizeEvt, calculate_size, false);
+            document.addEventListener('DOMContentLoaded', calculate_size, false);
+            calculate_size();
+        }
+
+        function UpdateEmail() {
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击修改邮箱按钮", '@ViewBag.mid', '');
+            @*var url = "@ViewBag.url";
+            window.location.href = url;*@
+            if ($("#nowmail").val().trim() == "") {
+                layer.open({ content: "请输入Email", time: 2 });
+                return;
+            }
+            $.post("/IO/Data/ChangeEmail?email=" + $("#nowmail").val(), null, function (response) {
+                if (response.success) {
+                    $("#mail").val($("#nowmail").val())
+                    alert("修改成功！");
+                }
+                else {
+                    alert(response.message);
+                }
+            }, "json");
+        }
+
+        function base64Encode(input) {
+            var rv;
+            rv = encodeURIComponent(input);
+            rv = unescape(rv);
+            rv = window.btoa(rv);
+            return rv;
+        }
+
+        function base64Decode(input) {
+            rv = window.atob(input);
+            rv = escape(rv);
+            rv = decodeURIComponent(rv);
+            return rv;
+        }
+
+        function data_click_log(mid, did) {
+            $.ajax({
+                url: "/ClickLog/Data_Click_Log",
+                type: "post",
+                data: { "mid": mid, "did": did },
+                success: function (r) {
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+        function downphone() {
+            var mid = $("#downphone").attr("data-mid");
+            var did = $("#downphone").attr("data-did");
+            var url = "@(path)"+$("#downphone").attr("data-url");
+            layer.open({ type: 2, time: 2 });
+            data_click_log(mid, did);
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "浏览资料", did, '');
+            window.open(url, '_blank');
+        }
+        var IsAll = true;
+        $().ready(function () {
+            var documentHeight = $(document).height();
+            $(".meet-interd").height(documentHeight);
+            $(".bounceBack").height(documentHeight);
+            $(window).resize(function () {
+                var documentHeight = $(document).height();
+                $(".meet-interd").height(documentHeight);
+                $(".bounceBack").height(documentHeight);
+
+            });
+            $(".sed-title").each(function () {
+                var html = this.innerHTML;
+                this.innerHTML = html.replace(/\®/g, "<sup>®</sup>").replace(/\©/g, "<sup>©</sup>");
+            });
+            WriteLog('@ViewBag.mid', '', "VIEW", "浏览");
+
+            $(".datadown").click(function () {
+                $('#select').modal('show');
+                $("#downphone").attr("data-url", $(this).attr("data-url"));
+                $("#downphone").attr("data-mid", $(this).attr("data-mid"));
+                $("#downphone").attr("data-did", $(this).attr("data-did"));
+                $(".datadown").attr("data-check", false);
+                $(this).attr("data-check", true);
+            });
+            $("#sendonetoemail").click(function () {
+                IsAll = false;
+                $('#select').modal('hide');
+                $('#email').modal('show');
+            });
+            $('.downAll').on('click', function () {
+                IsAll = true;
+                $(".datadown").attr("data-check", false);
+                $('#email').modal('show');
+            })
+
+            $(".btnSend").click(function () {
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击发送按钮", '@ViewBag.mid', '');
+            var EmailHtml = "";
+            var name = "";
+            var server = "@(path)";
+            if (IsAll) {
+                $('.datadown').each(function () {
+                    EmailHtml += "<p> <a href='" + server + $(this).attr("data-url") + "'>" + $(this).attr("data-name") + "</a></p><br/>";
+                    name += $(this).attr("data-name") + "|";
+                });
+            } else {
+                $('.datadown').each(function (e, i) {
+                    if ($(this).attr("data-check") == "true") {
+                        EmailHtml += "<p><a href='" + server + $(this).attr("data-url") + "'>" + $(this).attr("data-name") + "</a></p><br/>";
+                        name += $(this).attr("data-name") + "|";
+                    }
+                });
+            }
+            if ($("#mail").val().trim() == "") {
+                layer.open({ content: "请输入Email", time: 2 });
+                return;
+            }
+            $(".datadown").attr("data-check", "false");
+            name = name.substring(0, name.length - 1);
+            EmailHtml = base64Encode(EmailHtml);
+            var title = '@(ViewBag.mTitle)' + "资料下载";
+            layer.open({ type: 2 });
+            $.ajax({
+                url: "/IO/Meeting/SendEmail",
+                type: "post",
+                data: { "mid": '@ViewBag.mid', "Name": name, MeetingName: '@ViewBag.mTitle', Title: title, "toUserEmail": $("#mail").val(), EmailHtml: EmailHtml },
+                success: function (r) {
+                    layer.closeAll();
+                    layer.open({ content: "资料已发送到您的邮箱", time: 2 });
+                    $('#select').modal('hide');
+                    $('#email').modal('hide');
+                    return;
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        });
+
+
+        });
+    </script>
+</body>
+</html>

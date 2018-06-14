@@ -1,0 +1,169 @@
+﻿@{
+    Layout = null;
+    Services.Models.md_seminar_meeting_main meeting = ViewBag.meeting;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会议签到</title>
+    <link rel="stylesheet" href="/IO/Content/css/form.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_621643_9rz26cc0k8adcxr.css">
+    <style>
+
+        #header {
+            height: 1.4rem;
+            line-height: 1.2rem;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 24px;
+            /*line-height: 24px;*/
+            line-height: 24px;
+            text-align: center;
+            font-weight: normal;
+            padding: 0 4%;
+            color: #fff;
+            text-shadow: 2px 2px 2px #00007a;
+            margin-top: .5rem;
+        }
+
+        /* 图片地址需要修改 */
+    body { background: url('/IO/Content/images/bg@2x.png') no-repeat; background-size: 100% 100%; width: 100%; }
+
+    div.body { background: url('/IO/Content/images/qhbg@2x.png') no-repeat; background-size: 100% 100%; width: 100%; }
+    </style>
+</head>
+<body>
+    <input type="hidden" id="id" value="@(meeting.mid)" />
+
+    <div id="header">
+        <h1>@(meeting.mtitle)</h1>
+    </div>
+
+    <div class="body">
+        <div class="info">
+            <h5>开始时间：</h5>
+            <h6>@(meeting.mbegintime.Value.ToString("yyyy年MM月dd日 HH:mm"))</h6>
+            <h5>结束时间：</h5>
+            <h6>@(meeting.mendtime.Value.ToString("yyyy年MM月dd日 HH:mm"))</h6>
+            <h5>会议地点：</h5>
+            <h6>@(meeting.msite)</h6>
+        </div>
+        <div class="main">
+            <p class='title'>请真实填写如下信息</p>
+            <p class='comment'>(信息仅用于注册验证，我们不会泄露您的信息)</p>
+            <h5>
+                <img src="/IO/Content/images/call@2x.png">
+                <input type="number" placeholder="请输入手机号" id="mobile" maxlength="11">
+            </h5>
+            <h5>
+                <img src="/IO/Content/images/8@2x.png">
+                <input type="text" placeholder="请输入验证码" id="smsCode" style="width: 2.5rem;">
+                <button id='verifyNum'>获取验证码</button>
+            </h5>
+            <h5>
+                <img src="/IO/Content/images/mz@2x.png">
+                <input type="text" placeholder="请输入姓名" id="nickname">
+            </h5>
+            <h5>
+                <img src="/IO/Content/images/xb@2x.png">
+                <select name="" id="gender">
+                    <option value="1">女</option>
+                    <option value="2">男</option>
+                </select>
+                <i class="iconfont icon-jiantou"></i>
+            </h5>
+            <h5>
+                <img src="/IO/Content/images/sf@2x.png">
+                <select name="" id="province">
+                    <option value="">请选择省份</option>
+                    <option value="anhui">安徽</option>
+                </select>
+                <i class="iconfont icon-jiantou"></i>
+            </h5>
+            <h5>
+                <img src="/IO/Content/images/callin@2x.png">
+                <select name="" id="city">
+                    <option value="">请选择城市</option>
+                    <option value="">安徽</option>
+                </select>
+                <i class="iconfont icon-jiantou"></i>
+            </h5>
+            <h5>
+                <img src="/IO/Content/images/follow@2x.png">
+                <input type="text" placeholder="请选择医院" id="hospital">
+            </h5>
+            <h5>
+                <img src="/IO/Content/images/comments@2x.png">
+                <select name="" id="department">
+                    <option value="default">请选择科室</option>
+                    <option>安徽</option>
+                </select>
+                <i class="iconfont icon-jiantou"></i>
+            </h5>
+            <h5>
+                <img src="/IO/Content/images/message@2x.png">
+                <input type="text" placeholder="请输入邮箱" id="email">
+            </h5>
+            <h5>
+                <img src="/IO/Content/images/aboutcopy@2x.png">
+                <select name="" id="professionalTitle">
+                    <option value="default">请选择专业职称</option>
+                    <option value="anhui">安徽</option>
+                </select>
+                <i class="iconfont icon-jiantou"></i>
+            </h5>
+            <h6 id='l'>
+                <span>
+                    <input type="checkbox" name='lic' class='choose' id='lic'>
+                    <label for="lic"></label>
+                </span>
+                <label for='lic' class='content'>接受施贵宝平台用户协议及4隐私条款</label>
+            </h6>
+            <h6>
+                <span>
+                    <input type="checkbox" name='rec' class='choose' id='rec'>
+                    <label for="rec"></label>
+                </span>
+                <label for='rec' class='content'>愿意收到施贵宝的医学信息及产品推广</label>
+            </h6>
+        </div>
+        <div class="foot">
+            <img src="/IO/Content/images/commit@2x.png">
+        </div>
+    </div>
+
+    <script src='/IO/Scripts/zepto.min.js'></script>
+    <script>
+        var time = 60;
+        $('#verifyNum').on('click', GetSMSCode);
+        function GetSMSCode() {
+            $('#verifyNum').off('click', GetSMSCode);
+            $.get('/IO/Sign/GetSMSCode?phone=' + $("#mobile").val(), function (response) {
+                if (response.success) {
+                    var clock = setInterval(function () {
+                        if (--time < 1) {
+                            time = 60;
+                            clearInterval(clock);
+                            $('#verifyNum').html('获取验证码');
+                            $('#verifyNum').on('click', GetSMSCode);
+                            return;
+                        }
+                        $('#verifyNum').html(time);
+                    }, 1000);
+                }
+                else {
+                    alert(response.message);
+                    $('#verifyNum').on('click', GetSMSCode);
+                }
+            });
+        }
+
+    </script>
+
+</body>
+</html>

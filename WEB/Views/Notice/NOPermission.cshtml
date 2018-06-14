@@ -1,0 +1,46 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8">
+<title>提示</title>
+<meta http-equiv="Content-Type" content="textml; charset=UTF-8">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="pragram" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+<link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/css/index.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <style>
+        body, html {
+            width: 100%;
+            height: 100%;
+        }
+
+        .indenty {
+            background: url('/Content/images/ren1.jpg') no-repeat;
+            width: 100%;
+            /*height: 100%;*/
+            background-size: 100% 100%;
+        }
+    </style>
+
+</head>
+<body class="indenty">
+    <script>
+        $(function () {
+            WriteLog('', '', "VIEW", "浏览");
+        });
+    </script>
+</body>
+</html>

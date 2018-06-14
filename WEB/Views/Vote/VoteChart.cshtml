@@ -1,0 +1,328 @@
+﻿@model Services.Models.md_seminar_vote
+@{
+    ViewBag.Title = "VoteChart";
+}
+
+<h2></h2>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="pragram" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/echarts.min.js"></script>
+<script src="~/Scripts/layer.mobile/layer.js"></script>
+<script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+<script>
+    var ip = returnCitySN["cip"]
+</script>
+<script src="~/Scripts/getbrowser.js"></script>
+@*<img src="" />*@
+<body style="background: url('/IO/Content/images/bg@2x.png') no-repeat; background-size: 100% 100%; ">
+    <input id="btn" type="button" class="btn btnSure" value="返回投票列表" /> 
+    <div id="main" style="width:100vw;height:100vh;"></div> 
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+    .btnSure, .btnStop {
+        border: none;
+        font-weight: bold;
+        font-size: 12px;
+        position: absolute;
+        cursor: pointer;
+        margin: 1% 9% 0 0;
+        width: 98px;
+        height: 40px;
+        right: -7%;
+        z-index:999;
+    }
+
+    .btnSure {
+        background: url(/IO/Content/images/starv.png) no-repeat;
+        background-size: 100% 100%;
+        color: rgb(70,130,197);
+    }
+
+    .btnStop {
+        background: url(/IO/Content/images/stop.png) no-repeat;
+        background-size: 100% 100%;
+        color: #fff;
+    }
+</style>
+
+<script type="text/javascript">
+    var mid=0;
+    var time= Math.round(Math.random()*5+5)*1000;
+    var myChart = echarts.init(document.getElementById('main'));
+    var _anwers='@Model.vanswer';
+    _anwers=_anwers.split('|');
+    var count;
+    var tempoption = ["A", "B", "C", "D", "E"];
+    var option = tempoption.slice(0, _anwers.length);
+    var _data = [];
+    var Chartdata;
+    var A=0;
+    var B=0;
+    var C=0;
+    var D=0;
+    var E=0;
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return r[2]; return null;
+    }
+    $(window).resize(function() {
+        $("#report_box").height("100vh");
+        $("#report_box").width("100vw");
+        myChart = echarts.init(document.getElementById('main'));
+        InitChart();
+    });
+    $(document).ready(function () {
+        WriteLog('', '', "VIEW", "浏览");
+        ///*
+        //* 智能机浏览器版本信息:
+        //*
+        //*/
+        var browser = {
+            versions: function () {
+                var u = navigator.userAgent, app = navigator.appVersion;
+                return {//<a href="http://www.suchso.com/productdesign/sharemobileappproductdesign.html" class="keylink" title=" 移动" target="_blank">移动</a>终端浏览器版本信息
+                    trident: u.indexOf('Trident') > -1, //IE内核
+                    presto: u.indexOf('Presto') > -1, //opera内核
+                    webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                    gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                    mobile: !!u.match(/AppleWebKit.*Mobile.*/) || !!u.match(/AppleWebKit/), //是否为移动终端
+                    ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                    android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                    iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者QQHD浏览器
+                    iPad: u.indexOf('iPad') > -1, //是否iPad
+                    webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+                };
+            }(),
+            language: (navigator.browserLanguage || navigator.language).toLowerCase()
+        }
+
+        //document.writeln("语言版本: "+browser.language);
+        //document.writeln(" 是否为移动终端: "+browser.versions.mobile);
+        //document.writeln(" ios终端: "+browser.versions.ios);
+        //document.writeln(" android终端: "+browser.versions.android);
+        //document.writeln(" 是否为iPhone: "+browser.versions.iPhone);
+        //document.writeln(" 是否iPad: "+browser.versions.iPad);
+        //document.writeln(navigator.userAgent);
+        var pagewidth = $(window).width();
+        var pageheight = $(window).height();
+        if (browser.versions.mobile) {
+            window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", hengshuping, false);
+            $("#report_box").height(pageheight * 0.6);
+            $("#report_box").width(pagewidth * 0.95);
+        }
+        else {
+            $("#report_box").height("100vh");
+            $("#report_box").width("100vw");
+            myChart = echarts.init(document.getElementById('main'));
+            InitChart();
+        }
+        //下面是加载echarts报表
+        //加载数据
+        LoadData();
+        InitChart();
+        $("#btn").click(function () {
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "返回投票列表", '@Model.vid', '');
+            window.location.href="/IO/Vote/index/"+GetQueryString("mid");
+        });
+    });
+
+    //屏幕旋转
+    function hengshuping() {
+        if (window.orientation == 180 || window.orientation == 0) {
+            $("#report_box").height($(window).height() - 20);
+            $("#report_box").width("100vw");
+            myChart = echarts.init(document.getElementById('main'));
+            InitChart();
+        }
+        if (window.orientation == 90 || window.orientation == -90) {
+            $("#report_box").height($(window).height() - 20);
+            $("#report_box").width("100vw");
+            myChart = echarts.init(document.getElementById('main'));
+            InitChart();
+        }
+    }
+
+    //加载数据
+    function LoadData() {
+        _data = [];
+        $.ajax({
+            url: "/IO/Vote/GetVoteResultList",
+            type: "post",
+            data: { "vid": @Model.vid},
+            async:false,
+            success: function (r) {
+                count=r.Count;
+                mid=1;
+                for (var i = 0; i <r.data.length; i++) {
+                    var op=r.data[i].result.substring(0,1).toUpperCase();
+                    switch (op) {
+                        case "A" :
+                            A=r.data[i].count;
+                            break;
+                        case "B" :
+                            B=r.data[i].count;
+                            break;
+                        case "C" :
+                            C=r.data[i].count;
+                            break;
+                        case "D" :
+                            D=r.data[i].count;
+                            break;
+                        case "E" :
+                            E=r.data[i].count;
+                            break;
+                    }
+                }
+                switch (_anwers.length) {
+                    case 1 :
+                        _data.push(A);
+                        break;
+                    case 2 :
+                        _data.push(A);
+                        _data.push(B);
+                        break;
+                    case 3 :
+                        _data.push(A);
+                        _data.push(B);
+                        _data.push(C);
+                        break;
+                    case 4 :
+                        _data.push(A);
+                        _data.push(B);
+                        _data.push(C);
+                        _data.push(D);
+                        break;
+                    case 5 :
+                        _data.push(A);
+                        _data.push(B);
+                        _data.push(C);
+                        _data.push(D);
+                        _data.push(E);
+                        break;
+                }
+
+                Chartdata= { "categories": option, "data": _data };
+            },
+            error: function (r) {
+                console.log(r.responseText);
+            }
+        });
+    }
+
+
+
+    //初始化数据
+    function InitChart() {
+        var option = {
+            title: {
+                text: '',
+
+            },
+            tooltip: {
+                trigger: 'axis',
+                position: function (p) {
+                    // 位置回调
+                  //  console.log(p);
+                    // console.log && console.log(p);
+                    return [ 20, 20];
+                },
+                formatter: function (params) {
+                    var aws=_anwers[params[0].dataIndex].split('');
+                    var aw="";
+                    for (var i = 0; i < aws.length; i++) {
+                        if(i!=0&& i%16==0){
+                           aw+=aws[i]+"<br/>"
+                        }else{
+                            aw+=aws[i];
+                        }
+                    }
+                    return aw+":<br/>"+Chartdata.data[params[0].dataIndex];
+                },
+
+            },
+            legend: {
+                data: [''],
+
+            },
+            xAxis: {
+                data: Chartdata.categories,
+                splitLine: {
+                    show: false
+                },
+                axisLine:{
+                    lineStyle:{
+                        color:'white',
+                    }
+                },
+            },
+            yAxis: {
+                splitLine: {
+                    show: false
+                },
+                axisLine:{
+                    lineStyle:{
+                        color:'white',
+
+                    }
+                },
+            },
+            series: [{
+                name: '',
+                type: 'bar',
+                itemStyle:{
+                    normal:{
+                        color:function (params) {
+                            var colorList = ["rgb(242,156,79)", "rgb(242,156,79)", "rgb(242,156,79)", "rgb(242,156,79)", "rgb(242,156,79)"];
+                            return colorList[params.dataIndex]
+                        },
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: "rgb(242, 156, 79)",
+                                fontWeight: 'bolder',
+                                fontSize: 16
+                            }
+                        }
+                    }
+                },
+                data: Chartdata.data,
+
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    }
+
+
+    //更新数据
+    setInterval(UpdateChart,time);
+    function UpdateChart() {
+        LoadData();
+        //console.log(Chartdata);
+        // 基于准备好的dom，初始化echarts实例
+        myChart.setOption(
+               {
+                   xAxis: {
+                       data: Chartdata.categories
+                   },
+                   yAxis: {},
+                   series: [{
+                       data: Chartdata.data
+                   }]
+               });
+        // 显示标题，图例和空的坐标轴
+
+    }
+
+</script>

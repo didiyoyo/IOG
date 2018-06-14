@@ -1,0 +1,216 @@
+﻿@using Services.Models;
+@{
+    Layout = null;
+    var doctorShcdule = ViewBag.DoctorSchedule as travel_information;
+    var userInfo = ViewBag.UserInfo as UserInfo;
+    var departuretime = doctorShcdule.departuretime;
+    var date_stay = doctorShcdule.date_stay;
+    var departure_date = doctorShcdule.departure_date;
+    var return_departuretime = doctorShcdule.return_departuretime;
+    Dictionary<int, List<string>> shcdule = new Dictionary<int, List<string>>();
+    int loopCount = 0;
+    if (departuretime.HasValue)
+    {
+        loopCount++;
+        shcdule[loopCount] = new List<string>();
+        shcdule[loopCount].Add("departuretime");
+        if (date_stay.HasValue)
+        {
+            if (date_stay.Value.Date != departuretime.Value.Date)
+            {
+                loopCount++;
+                shcdule[loopCount] = new List<string>();
+                shcdule[loopCount].Add("date_stay");
+            }
+            else
+            {
+                shcdule[loopCount].Add("date_stay");
+            }
+            if (departure_date.HasValue)
+            {
+                if (departure_date.Value.Date != date_stay.Value.Date)
+                {
+                    loopCount++;
+                    shcdule[loopCount] = new List<string>();
+                    shcdule[loopCount].Add("departure_date");
+                }
+                else
+                {
+                    shcdule[loopCount].Add("departure_date");
+                }
+                if (return_departuretime.HasValue)
+                {
+                    if (return_departuretime.Value.Date != departure_date.Value.Date)
+                    {
+                        loopCount++;
+                        shcdule[loopCount] = new List<string>();
+                        shcdule[loopCount].Add("return_departuretime");
+                    }
+                    else
+                    {
+                        shcdule[loopCount].Add("return_departuretime");
+                    }
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+
+            }
+        }
+        else
+        {
+
+        }
+    }
+
+    var meeting = ViewBag.Meeting as md_seminar_meeting_main;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>行程和住宿</title>
+    <link rel="stylesheet" href="/IO/Content/css/doctor_schedule.css">
+    <style>
+        /* body {
+            background: url('./images/bg_notice@2x.jpg') no-repeat;
+            background-size: 100% 100%;
+            background-attachment: fixed;
+        } */
+        body::before {
+            background: url('/IO/Content/images/schedule_bg.png') center 0 no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <input id="mid" type="hidden" value="@(meeting.mid)" />
+    <h2>@meeting.mtitle</h2>
+
+    @*<h5 class="remind">提醒：会务组将以400-XXXXX电话和您的手机号@(userInfo.mobile)联系行程事宜，请注意接听来电。</h5>*@
+    <h5 class="remind">行程如有改动，以会务组最新的行程信息为准。</h5>
+    @*<p class="num">
+            <img src="~/Content/images/adviseNumber@2x.png" alt="指定号码" />
+        </p>*@
+    @foreach (var key in shcdule.Keys)
+    {
+        <section>
+            @if (shcdule[key] != null)
+            {
+                switch (shcdule[key][0])
+                {
+                    case "departuretime":
+                        <div class='left'><p>@doctorShcdule.departuretime.Value.Day.</p><p>@doctorShcdule.departuretime.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
+                        break;
+                    case "date_stay":
+                        <div class='left'><p>@doctorShcdule.date_stay.Value.Day.</p><p>@doctorShcdule.date_stay.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
+                        break;
+                    case "departure_date":
+                        <div class='left'><p>@doctorShcdule.departure_date.Value.Day.</p><p>@doctorShcdule.departure_date.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
+                        break;
+                    case "return_departuretime":
+                        <div class='left'><p>@doctorShcdule.return_departuretime.Value.Day.</p><p>@doctorShcdule.return_departuretime.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
+                        break;
+                }
+            }
+            <div class='right'>
+                @foreach (var item in shcdule[key])
+                {
+                <!-- 出行工具飞机：flight  火车：train   酒店住宿：hotel -->
+                <!-- 出行模版 -->
+                    if (item == "departuretime")
+                    {
+                        if (doctorShcdule.transportation == "飞机")
+                        {
+                            <div class='part flight'>
+                                <span class='tag'></span>
+                                <h6>@doctorShcdule.Flight&nbsp;&nbsp;@doctorShcdule.city - @doctorShcdule.arrivecity</h6>
+                                <div class='details'><h5>@doctorShcdule.setout</h5> <img src="/IO/Content/images/arrow.png"> <h5>@doctorShcdule.destination</h5></div>
+                                <div class='details'><h5 class='date'>@doctorShcdule.departuretime.Value.ToString("MM.dd")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@doctorShcdule.departuretime.Value.ToString("HH:mm")</h5><h5 class='date'>@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
+                            </div>
+                        }
+                        //else if (doctorShcdule.transportation == "火车")
+                        else
+                        {
+                            <div class='part train'>
+                                <span class='tag'></span>
+                                <h6>@doctorShcdule.Flight&nbsp;&nbsp;@doctorShcdule.city - @doctorShcdule.arrivecity</h6>
+                                <div class='details'><h5>@doctorShcdule.setout</h5> <img src="/IO/Content/images/arrow.png"> <h5>@doctorShcdule.destination</h5></div>
+                                <div class='details'><h5 class='date'>@doctorShcdule.departuretime.Value.ToString("MM.dd")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@doctorShcdule.departuretime.Value.ToString("HH:mm")</h5><h5 class='date'>@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
+                            </div>
+                        }
+                    }
+                    if (item == "date_stay")
+                    {
+                        <!-- 住宿模版 -->
+                        <div class='part hotel'>
+                            <span class='tag'></span>
+                            <h6>@doctorShcdule.addres</h6>
+                            <div class='details'><h5>@doctorShcdule.hotelname</h5></div>
+                            <div class='details'><h5 class='date'>@(doctorShcdule.date_stay.HasValue ? doctorShcdule.date_stay.Value.ToString("MM.dd") : "") &nbsp;入住</h5></div>
+                        </div>
+                    }
+                    if (item == "departure_date")
+                    {
+                        <!-- 住宿模版 -->
+                        <div class='part hotel'>
+                            <span class='tag'></span>
+                            <h6>@doctorShcdule.addres</h6>
+                            <div class='details'><h5>@doctorShcdule.hotelname</h5></div>
+                            <div class='details'><h5 class='date'>@(doctorShcdule.departure_date.HasValue ? doctorShcdule.departure_date.Value.ToString("MM.dd") : "")&nbsp;离店</h5></div>
+                        </div>
+                    }
+                    if (item == "return_departuretime")
+                    {
+                        if (doctorShcdule.return_transportation == "飞机")
+                        {
+                            <div class='part flight'>
+                                <span class='tag'></span>
+                                <h6>@doctorShcdule.return_Flight&nbsp;&nbsp;@doctorShcdule.return_city - @doctorShcdule.return_arrivecity</h6>
+                                <div class='details'><h5>@doctorShcdule.return_setout</h5> <img src="/IO/Content/images/arrow.png"> <h5>@doctorShcdule.return_destination</h5></div>
+                                <div class='details'><h5 class='date'>@doctorShcdule.return_departuretime.Value.ToString("MM.dd")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@doctorShcdule.return_departuretime.Value.ToString("HH:mm")</h5><h5 class='date'>@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
+                            </div>
+                        }
+                        //else if (doctorShcdule.return_transportation == "火车")
+                        else
+                        {
+                            <div class='part train'>
+                                <span class='tag'></span>
+                                <h6>@doctorShcdule.return_Flight&nbsp;&nbsp;@doctorShcdule.return_city - @doctorShcdule.return_arrivecity</h6>
+                                <div class='details'><h5>@doctorShcdule.return_setout</h5> <img src="/IO/Content/images/arrow.png"> <h5>@doctorShcdule.return_destination</h5></div>
+                                <div class='details'><h5 class='date'>@doctorShcdule.return_departuretime.Value.ToString("MM.dd")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@doctorShcdule.return_departuretime.Value.ToString("HH:mm")</h5><h5 class='date'>@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </section>
+    }
+
+    <script src='/IO/Scripts/zepto.min.js'></script>
+    <script>
+        click_log($("#mid").val(), "查看行程信息", null)
+        function click_log(mid, type, callback) {
+            $.ajax({
+                url: "/IO/ClickLog/Click_Log",
+                type: "post",
+                data: { "mid": mid, "modelName": type },
+                success: function (r) {
+                    if (callback) {
+                        callback();
+                    }
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

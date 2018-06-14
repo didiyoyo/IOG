@@ -1,0 +1,372 @@
+﻿@model IEnumerable<Services.Models.md_seminar_meeting_main>
+@{
+    ViewBag.Title = "我的会议";
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>IO会议互动</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+    <style>
+        .newMeet {
+            width: 100%;
+            background-size: 100% 100%;
+        }
+
+        .tabSecond > img {
+            float: left;
+            width: 50%;
+
+        }
+
+        .hTitle {
+            width: 100%;
+            display: table;
+            height: 30vh;
+        }
+
+        h1 {
+            display: block;
+            width: 100%;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 2.5rem;
+            color: #fff;
+        }
+
+        .oneNew {
+            width: 90%;
+            margin: 0 auto;
+            position: relative;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 11px;
+        }
+            .oneNew:not(:first-child) {
+                padding-top:8%;
+            }
+
+            .oneNew:nth-child(odd) {
+                /*text-align: right;*/
+            }
+
+            .oneNew:nth-child(even) .enterMeet {
+                float: left;
+            }
+
+            .odd .oneNew:last-of-type {
+                padding-bottom: 120px;
+                border:none;
+            }
+        .oneNew:last-of-type {
+            /*border: none;*/
+        } .enterMeet {
+            background: url(/IO/Content/images/jrhi.png) no-repeat;
+            width: 29%;
+            height: 33px;
+            margin: 10px 0;
+            background-size: 100% 100%;
+            text-align: center;
+            line-height: 36px;
+            font-size: 14px;
+            float: left;
+        }
+
+        .mainTab {
+            overflow-y: scroll;
+            display: none;
+           width:100%;
+           height:75vh;
+        }
+        .tabSecond img{
+            position: relative;
+            z-index: 10;
+        }
+        .s {
+            color: #768390 !important;
+        }
+        .enterMeet{
+            color:#4866b0!important; 
+        }
+        .tOne {
+            transform: translateY(75%);
+        }
+        .tTwo {
+            transform:translateY(6%);
+        }
+        .tHird {
+            display:none;
+        }
+        .wrapper {
+            position: absolute;
+            top:14%;
+            width:100%;
+        }
+        .hTitle {
+            position:relative;
+        }
+        .hTitle h1 {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+            .hTitle .tips {
+                position: absolute;
+                top: 25%;
+                transform: translateY(-50%);
+                color: #fff;
+                font-size: 1.5rem;
+                text-align: center;
+                width: 100%;
+            }
+       
+        .tabSecond {
+            position:relative;
+            height:25vh;
+        }
+        .tabSecond .wrapper_01 {
+            position: absolute;
+            width: 100%;
+            top: -130%;
+            z-index: -1;
+        }
+        .bg {
+            position:absolute;
+            z-index:-1;
+            height:100vh;
+            width:100%;
+            top:-10%;
+        }
+        .mainTab {
+            /*background: url(/IO/Content/images/wrapper_02.jpg) no-repeat;*/
+            background-size: cover;
+            box-sizing:border-box;
+            padding-top:10px;
+            /*min-height: 60vh;*/
+        }
+        .footer {
+            position: absolute;
+            right: 0;
+            width: 100%;
+            bottom: 0;
+        }
+        .tabMaind {
+            position:relative;
+            background-image:url(/IO/Content/images/bg@2x_l.png);
+            background-repeat:no-repeat;
+            background-size:cover;
+            height:100vh;
+        }
+       
+        .arrow-down {
+            background-image:url(/IO/Content/images/tips_down@2x.png);
+            width:15px;
+            height:15px;
+            background-size:15px 15px;
+            position:fixed;
+            bottom:5%;
+            left:15%;
+        }
+        .left-i {
+            position:fixed;
+            left:0;
+            z-index:10;
+            height:10vh;
+            top:50%;
+
+        }
+        .bottom-i {
+            position: fixed;
+            bottom: 0;
+            left: 13vw;
+            width:20vw;
+            z-index: 10;
+        }
+
+     
+    </style>
+</head>
+<body>
+    <img src="~/Content/images/bg@2x.png" class="bg"/>
+    <img src="~/Content/images/xb1@2x.png" class="left-i" />
+    <img src="~/Content/images/xb2@2x.png" class="bottom-i"/>
+    <section class="newMeet">
+        <div class="tabMaind">
+            <div class="tabSecond clearfix">
+                <img class="tOne" src="~/Content/images/tab_04_on.png" />
+                <img class="tTwo" src="~/Content/images/tab_05.png" />
+                <img class="tHird" src="~/Content/images/tab_03.png" />
+            </div>
+            @if ((@ViewBag.NOTOpen).Count != 0)
+            {
+                <div id="one" class="mainTab">
+                    @foreach (var item in ViewBag.NOTOpen)
+                    {  
+                    <div class="oneNew clearfix" onclick="Jump(@item.mid)">
+
+                        <p class="meet-title s">@item.mtitle</p>
+
+                        <div>
+                            <p class="s" style="font-size:14px;">会议开始时间:<span>@Convert.ToDateTime(@item.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                            <p class="s" style="font-size:14px;">会议结束时间:<span>@Convert.ToDateTime(@item.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                            <p class="s" style="font-size:14px;">会议地点:@item.msite</p>
+                        </div>
+                        <p class="enterMeet"></p>
+                    </div>
+                    }
+                    <img src="/Content/images/footer_l.png" alt="wrapper" class="footer" />
+
+                </div>
+            }
+            else
+            {
+                <div id="one" class="mainTab">
+                    <div style="line-height:200px; color:#a9b6c7; text-align:center; font-size:20px; font-weight:bold;">
+                        您当前暂时没有会议
+                    </div>
+                </div>
+            }
+
+
+            @if ((@ViewBag.Open).Count != 0)
+            {
+                <div id="two" class="mainTab">
+
+                    @foreach (var item in ViewBag.Open)
+                    { 
+                    <div class="oneNew clearfix" onclick="Jump(@item.mid)">
+
+                        <p class="meet-title s">@item.mtitle</p>
+
+                        <div @*class="meet-new"*@>
+                            <p class="s" style="font-size:14px;">会议开始时间:<span>@Convert.ToDateTime(@item.mbegintime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                            <p class="s" style="font-size:14px;">会议结束时间:<span>@Convert.ToDateTime(@item.mendtime).ToString("yyyy年MM月dd日 HH:mm")</span></p>
+                            <p class="s" style="font-size:14px;">会议地点:@item.msite</p>
+                        </div>
+                        <p class="enterMeet"></p>
+
+                    </div>
+                    }
+                    <img src="~/Content/images/footer_l.png" alt="wrapper" class="footer" />
+
+                </div>
+            }
+            else
+            {
+                <div id="two" class="mainTab">
+                    <div style="line-height:200px; color:#a9b6c7; text-align:center; font-size:20px; font-weight:bold;">
+                        您当前暂时没有会议
+                    </div>
+                </div>
+            }
+
+        </div>
+    </section>
+    <div class="arrow-down"></div>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script>
+        $("#one").css("display", "block");
+        $(".tOne").click(function () {
+            $(".mainTab").css("display", "none");
+            $("#one").css("display", "block");
+            $(this).attr("src", "/IO/Content/images//tab_04_on.png");
+            $(".tHird").attr("src", "/IO/Content/images/tab_05.png");
+            $(".tTwo").attr("src", "/IO/Content/images/tab_05.png");
+
+        });
+        $(".tTwo").click(function () {
+            $(this).attr("src", "/IO/Content/images/tab_05_on.png");
+            $(".mainTab").css("display", "none");
+            $("#two").css("display", "block");
+            $(".tOne").attr("src", "/IO/Content/images/tab_04.png");
+            $(".tHird").attr("src", "/IO/Content/images/tab_03.png");
+
+        });
+        function click_log(mid, type) {
+            $.ajax({
+                url: "/IO/ClickLog/Click_Log",
+                type: "post",
+                data: { "mid": mid, "modelName": type },
+                success: function (r) {
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+
+        function Jump(id) {
+            click_log(id, "会议");
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "浏览会议", id, '');
+            window.location.href = "/IO/Meeting/MeetingInfo/" + id;
+        }
+        $(function () {
+            var index = "@(ViewBag.tag)";
+            switch (index) {
+                case "1":
+                    $(".tOne").click();
+                    break;
+                case "2":
+                    $(".tTwo").click();
+                    break;
+            }
+        });
+        function arrowShow() {
+            if ($(document).height() - $(document).scrollTop() - window.innerHeight < 100) {
+                if (!$(".arrow-down").is(":hidden")) {
+                    $(".arrow-down").hide(500);
+                }
+            }
+            else {
+                $(".arrow-down").show(500);
+            }
+        };
+
+        function oddShow() {
+            var mainContainer = $(".mainTab");
+            for (var i = 0; i < mainContainer.length; i++) {
+                var length =$( mainContainer[i]).children(".oneNew").length;
+                if (length / 2 !== 0 && length > 1) {
+                    $(mainContainer[i]).addClass('odd')
+                }
+            }
+
+        }
+        function addWrap() {
+            var mainContainer = $(".mainTab");
+            for (var i = 0; i < mainContainer.length; i++){
+                $(mainContainer[i]).children('.oneNew:')
+
+            }
+
+        }
+
+
+
+        $(document).ready(function () {
+            arrowShow();
+            //oddShow();
+        })
+        $(document).scroll(function () {
+            arrowShow();
+        });  
+
+
+    </script>
+
+</body>
+
+</html>

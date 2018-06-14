@@ -1,0 +1,253 @@
+input, select {
+    -webkit-appearance: none;
+}
+input::-webkit-input-placeholder {
+    color: #aabab9;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, "Microsoft YaHei";
+}
+
+h2 {
+    font-size: .4rem;
+}
+h3 {
+    font-size: .3rem;
+}
+h4 {
+    font-size: .26rem;
+}
+h5 {
+    font-size: .28rem;
+    color: #5c7487;
+    font-weight: normal;
+}
+h6 {
+    font-size: .24rem;
+    color: #4a6983;
+    font-weight: normal;
+}
+p {
+    font-size: .2rem;
+    color: #666666;
+}
+
+body {
+    position: relative;
+    border-bottom: 1px solid;
+    /* overflow: hidden; */
+}
+
+h5 {
+    font-size: .26rem;
+    color: white;
+}
+h6 {
+    font-size: .28rem;
+    color: white;
+}
+
+
+.title {
+    font-size: .5rem;
+    width: 90%;
+    margin: .6rem auto;
+    text-align: center;
+    color: white;
+}
+
+h6.listItem {
+    width: 90%;
+    margin: 0 auto;
+    /* font-size: .22rem; */
+    margin-bottom: .1rem;
+    display: flex;
+}
+
+h6.listItem .listL {
+    width: .9rem;
+}
+    h6.listItem .listR {
+        width: 80%;
+    }
+
+.earthPic {
+    width: 100%;
+    height: 2rem;
+    position: absolute;
+    z-index: 1;
+}
+.blank {
+    margin-bottom: 2rem;
+}
+
+div.meetingInfo {
+    /*border: 1px solid #35ebe4;*/
+
+    width: 90%;
+    margin: 1rem auto;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+    /*padding: .4rem .2rem 1rem;*/
+    /*background: rgba(0, 0, 0, .2);*/
+    position: relative;
+    z-index: 9;
+}
+
+
+    div.meetingInfo .head {
+        background: url('/IO/Content/images/meetingHeader@2x.png') no-repeat;
+        background-size: 100%;
+        height: 1rem;
+    }
+    div.meetingInfo .foot {
+        background: url('/IO/Content/images/meetingfooter@2x.png') no-repeat;
+        background-size: 100%;
+        height: 1rem;
+    }
+    div.meetingInfo .meetingDesc {
+        background: url('/IO/Content/images/meetingBody@2x.png') no-repeat;
+        background-size: 100%;
+        padding: .5rem;
+    }
+
+    div.meetingInfo h5 {
+        text-align: center;
+        /*margin-bottom: .25rem;*/
+    }
+
+div.meetingInfo h6 {
+        line-height: .35rem;
+    }
+
+
+.schedule {
+    margin-top: 1rem;
+    margin-bottom: 7.5rem;
+    position: relative;
+    z-index: 9;
+}
+
+.itinerary {
+    width: 90%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 9;
+}
+
+.itinerary p {
+        font-size: .36rem;
+        color: white;
+        text-shadow: #126a79 2px 2px;
+        text-align: center;
+        margin-bottom: .2rem;
+    }
+
+.itinerary .head {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-justify-content: space-around;
+            -ms-flex-pack: distribute;
+                justify-content: space-around;
+        margin-bottom: .3rem;
+    }
+
+.itinerary .head span {
+            font-size: .28rem;
+            display: block;
+            width: 1.5rem;
+            height: -webkit-calc(1.5rem / 3);
+            height: -moz-calc(1.5rem / 3);
+            height: calc(1.5rem / 3);
+            line-height: -webkit-calc(1.5rem / 3);
+            line-height: -moz-calc(1.5rem / 3);
+            line-height: calc(1.5rem / 3);
+            text-align: center;
+            margin-top: .15rem;
+            color: white;
+        }
+
+.itinerary .table {
+        border: 1px solid #35ebe4;
+        width: 90%;
+        margin: 0 auto .5rem;
+    }
+
+.itinerary .table .line {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            min-height: 1.5rem;
+        }
+
+.itinerary .table .line .l, .itinerary .table .line .c, .itinerary .table .line .r {
+                text-align: center;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -moz-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-pack: center;
+                -webkit-justify-content: center;
+                   -moz-box-pack: center;
+                    -ms-flex-pack: center;
+                        justify-content: center;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                   -moz-box-align: center;
+                    -ms-flex-align: center;
+                        align-items: center;
+                line-height: .3rem;
+                -webkit-box-sizing: border-box;
+                   -moz-box-sizing: border-box;
+                        box-sizing: border-box;
+                padding: .1rem;
+                word-break: break-all;
+            }
+
+.itinerary .table .line .l {
+                width: 30%;
+            }
+
+.itinerary .table .line .c {
+                width: 40%;
+            }
+
+.itinerary .table .line .r {
+                width: 30%;
+            }
+
+.itinerary .table .line:nth-of-type(odd) {
+            background: rgba(0, 0, 0, .2);
+        }
+
+.itinerary .table .line:nth-of-type(even) {
+            background: rgba(150, 248, 255, 0.2);
+        }
+
+/* div.itinerary:last-of-type {
+    margin-bottom: 2.5rem;
+} */
+
+/* body>div:last-of-type {
+    margin-bottom: 2.5rem;
+} */
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: -webkit-calc(100vw / 0.817);
+    height: -moz-calc(100vw / 0.817);
+    height: calc(100vw / 0.817)
+}

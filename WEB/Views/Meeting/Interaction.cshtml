@@ -1,0 +1,251 @@
+﻿@model Services.Models.md_seminar_meeting_main
+@{
+    ViewBag.Title = "会议互动";
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>会议互动</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/layer.mobile/layer.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+        <script>
+            var ip = returnCitySN["cip"]
+        </script>
+        <script src="~/Scripts/getbrowser.js"></script>
+    <style>
+        @@media screen and (max-width: 320px) {
+            .inter-note > img {
+                margin-top: 7%;
+            }
+        }
+
+        @@media screen and (min-width: 322px) {
+            .inter-note > img {
+                margin-top: 4%;
+            }
+        }
+
+        .inter-note > p {
+            float: left;
+        }
+        .picShow{
+            width: 11%!important;margin-left: 24%!important;margin-right: 6%;
+        }
+        .tShow{
+            width: 16%!important;margin:7% 5% 0 22%;
+        }
+        .met-pic {
+            background: url(/IO/Content/images/bg@2x.png) no-repeat;
+            background-size: 100% 100%;
+
+        }
+
+        .meet-headerd {
+            width: 100%;
+    
+            height: 30%;
+           
+            display: table;
+        }
+        .sed-title{
+            font-size:28px!important;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="met-pic">
+        <div class="meet-headerd">
+            <h1 class="sed-title">@Model.mtitle</h1>
+        </div>
+        <div class="meet-note">
+            @if (Model.vote)
+            {
+                if (Model.mbegintime < DateTime.Now)
+                {
+                    <a href="javascript:VoteJump()">
+                        <div class="inter-note clearfix" id="vote">
+                            <img src="~/Content/images/vote1.png">
+                            <p class="in-note">投票</p>
+                        </div>
+                    </a>
+                }
+                else
+                {
+                    <a href="javascript:void(0);" onclick="OpenMsg('请在会议开始后进入',1,'@Model.mid')">
+                        <div class="inter-note clearfix" id="vote">
+                            <img src="~/Content/images/vote1.png">
+                            <p class="in-note">投票</p>
+                        </div>
+                    </a>
+                }
+
+            }
+            @if (Model.survey)
+            {
+                if (Model.mbegintime < DateTime.Now)
+                {
+                    <a href="javascript:SurveyJump()">
+                        <div class="inter-note clearfix" id="invest">
+                            <img class="picShow" src="~/Content/images/vote2.png">
+                            <p class="in-invest">调研</p>
+                        </div>
+                    </a>
+                }
+                else
+                {
+                    <a href="javascript:void(0);" onclick="OpenMsg('请在会议开始后进入',2,'@Model.mid')">
+                        <div class="inter-note clearfix" id="invest">
+                            <img class="picShow" src="~/Content/images/vote2.png">
+                            <p class="in-invest">调研</p>
+                        </div>
+                    </a>
+                }
+            }
+            @if (Model.question)
+            {
+                if (Model.mbegintime < DateTime.Now)
+                {
+                    if (Model.mendtime > DateTime.Now)
+                    {
+                        <a href="javascript:QuetionJump()">
+                            <div class="inter-note clearfix" id="ask">
+                                <img class="tShow" src="~/Content/images/vote3.png">
+                                <p class="in-ask">现场提问</p>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="javascript:void(0);" onclick="OpenMsg('会议已结束',3,'@Model.mid')">
+                            <div class="inter-note clearfix" id="invest">
+                                <img class="tShow" src="~/Content/images/vote3.png">
+                                <p class="in-ask">现场提问</p>
+                            </div>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <a href="javascript:void(0);" onclick="OpenMsg('请在会议开始后进入',3,'@Model.mid')">
+                        <div class="inter-note clearfix" id="invest">
+                            <img class="tShow" src="~/Content/images/vote3.png">
+                            <p class="in-ask">现场提问</p>
+                        </div>
+                    </a>
+                }
+            }
+
+        </div>
+    </section>
+    <script>
+        $(function () {
+            WriteLog('@Model.mid', '',"VIEW","浏览");
+            $(".sed-title").each(function () {
+                var html=this.innerHTML;
+                this.innerHTML=html.replace(/\®/g,"<sup>®</sup>").replace(/\©/g,"<sup>©</sup>");
+            });
+        });
+
+        function QuetionJump() {
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击现场提问按钮", @Model.mid, '');
+            window.location.href = "/IO/Question/Index/@Model.mid";
+        }
+
+
+        function SurveyJump() {
+            layer.open({ type: 2, shadeClose: false, });
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击调研按钮", @Model.mid, '');
+            $.ajax({
+                url: "/IO/Survey/CheckSurvey",
+                type: "post",
+                data: { "id": @Model.mid },
+                success: function (r) {
+                    layer.closeAll();
+                    if (r.msg == "true") {
+                        window.location.href = "/IO/Survey/Index/@Model.mid";
+                    }else {
+                        layer.open({ content: "调研暂未开启", time: 2 });
+                    }
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+
+        function VoteJump() {
+            layer.open({ type: 2, shadeClose: false, });
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击投票按钮", @Model.mid, '');
+            $.ajax({
+                url: "/IO/Vote/CheckVote",
+                type: "post",
+                data: { "id": @Model.mid },
+                success: function (r) {
+                    layer.closeAll();
+                    if (r.msg == "true") {
+                        window.location.href = "/IO/Vote/Index/@Model.mid";
+                    }else {
+                        layer.open({ content: "暂无投票", time: 2 });
+                    }
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+
+        function OpenMsg(msg,type,mid) {
+            switch (type) {
+                case 1:
+                    AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击投票按钮", mid, '');
+                    break;
+                case 2:
+                    AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击调研按钮", mid, '');
+                    break;
+                case 3:
+                    AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "点击现场提问按钮", mid, '');
+                    break;
+            }
+            layer.open({ content: msg, time: 2 });
+        }
+
+
+
+        var documentHeight = $(document).height();
+        $(".met-pic").height(documentHeight);
+        $(window).resize(function() {
+            var documentHeight = $(document).height();
+            $(".met-pic").height(documentHeight);
+        });
+        var calculate_size = function () {
+            var BASE_FONT_SIZE = 100,
+                docEl = document.documentElement,
+                clientWidth = docEl.clientWidth;
+            if (clientWidth) {
+                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+            }
+        };
+        // Abort if browser does not support addEventListener
+        if (document.addEventListener) {
+            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+            window.addEventListener(resizeEvt, calculate_size, false);
+            document.addEventListener('DOMContentLoaded', calculate_size, false);
+            calculate_size();
+        }
+
+    </script>
+</body>
+
+</html>

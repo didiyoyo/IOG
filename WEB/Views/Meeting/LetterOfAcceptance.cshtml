@@ -1,0 +1,29 @@
+﻿@using WEB.Model
+@{
+    Layout = null;
+    var letterInfo = ViewBag.letterInfo as LetterOfAcceptanceModel;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>接受函</title>
+    <style>
+        h4 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h4>@Html.Raw(letterInfo.Title)</h4>
+    <h4>@*接受函*@</h4>
+
+    <h6>@Html.Raw(letterInfo.Content)</h6>
+
+
+    <h6>@*我确认接受此次赞助已取得所在机构/政府行政部门的允许/批准。我的与会仅且仅为本人之医药知识和信息的增加。我接受此次赞助不会造成我与任何第三方之间的利益冲突，且我将不会因接受此次赞助而对任何第三方、机构或组织直接或间接地产生或引起与BMS的产品或服务有关的任何影响。*@</h6>
+
+</body>
+</html>

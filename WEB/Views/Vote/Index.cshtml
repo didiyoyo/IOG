@@ -1,0 +1,200 @@
+﻿@model IEnumerable<Services.Models.md_seminar_vote>
+@{
+    ViewBag.Title = "投票列表";
+    int index = 1;
+}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>投票列表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="pragram" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/index.css" rel="stylesheet" />
+    <style>
+        a:link {
+            text-decoration: none;
+        }
+        .choice-first {
+            padding: 3% 1% !important;
+        }
+        .cInterd { 
+            background-image: url('/IO/Content/images/bg@2x.png');
+            width: 100%;
+            background-size: 100% 100%;
+        }
+        .file-title{
+             color:#304b88!important;
+             width: 96%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+        }
+        .finished>a{
+            width:100%;
+        }
+        .cBack{
+            /*padding: 3% 1%!important;*/
+        }
+        .question {
+            word-wrap: break-word;
+            /* word-break: break-all; */
+            margin-bottom: 4%;
+            color: #2c2a2b;
+            font-size: .32rem;
+            background: -webkit-gradient(linear, 0 0, 0 bottom, from(#c5ecf3), to(#4597a0));
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: #fff;
+            position: relative;
+        }
+            .question.finished {
+                background: -webkit-gradient(linear, 0 0, 0 bottom, from(#d8d8d8), to(#999999));
+            }
+        .num {
+            color: #e88436;
+            display: block;
+            font-size: 30px;
+            position: absolute;
+            left: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .text {
+            margin-left: 10%;
+            display: block;
+            color:#fff!important;
+        }
+    </style>
+</head>
+<body>
+    <section class="cInterd">
+        <div class="meet-header">
+            <h1 class="sed-title">@ViewBag.mTitle</h1>
+        </div>
+        <div class="vote_list">
+            @foreach (var item in Model)
+            {
+                if (item.vstate == 2)
+                {
+                    <div class="op-back">
+                        <div class="finished question" onclick="Jump('@item.mid', '@item.vid')">
+                            <a href="javascript:void(0)">
+                                <p class="file-title"><span class="num">@index</span><span class="text">@item.vtopic@(item.vtype == 1 ? "(多选)" : "(单选)")</span></p>
+                                @*<span class="file-time">@Convert.ToDateTime(@item.vdatetime).ToString("yyyy年MM月dd日 HH:mm")</span>*@
+                            </a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="op-back">
+                        <div class="cBack question" onclick="Jump('@item.mid', '@item.vid')">
+                            <a href="javascript:void(0)">
+                                <p class="file-title"><span class="num">@index</span><span class="text">@item.vtopic@(item.vtype == 1 ? "(多选)" : "(单选)")</span></p>
+                                @*<span class="file-time">@Convert.ToDateTime(@item.vdatetime).ToString("yyyy年MM月dd日 HH:mm")</span>*@
+                            </a>
+                        </div>
+                    </div>
+                }
+
+                index++;
+            }
+        </div>
+
+    </section>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/layer.mobile/layer.js"></script>
+    <script src='http://pv.sohu.com/cityjson?ie=utf-8'></script>
+    <script>
+        var ip = returnCitySN["cip"]
+    </script>
+    <script src="~/Scripts/getbrowser.js"></script>
+    <script>
+        function Jump(mid, id) {
+            layer.open({ type: 2, shadeClose: false, });
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "浏览投票", id, '');
+            $.ajax({
+                url: "/IO/Vote/VoteById",
+                type: "post",
+                data: { "id": id },
+                success: function (r) {
+                    layer.closeAll();
+                    if (r.data.vstate == 0) {
+                        layer.open({ content: "该题投票暂未开启", time: 2 });
+                    } else if (r.data.vstate == 1) {
+                        IsVote(mid, id);
+                    } else if (r.data.vstate == 2) {
+                        window.location.href = "/IO/Vote/VoteChart/" + id + "?mid=" + mid;
+                    }
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+
+        function IsVote(mid, id) {
+            layer.open({ type: 2, shadeClose: false, });
+            $.ajax({
+                url: "/IO/Vote/IsVote",
+                type: "post",
+                data: { "id": id },
+                success: function (r) {
+                    layer.closeAll();
+                    AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "浏览投票", id, '');
+                    if (r.data == "true")
+                        window.location.href = "/IO/Vote/VoteChart/" + id + "?mid=" + mid;
+                    else
+                        window.location.href = "/IO/Vote/Vote/" + id;
+                },
+                error: function (r) {
+                    console.log(r.responseText);
+                }
+            });
+        }
+
+        var calculate_size = function () {
+            var BASE_FONT_SIZE = 100,
+                docEl = document.documentElement,
+                clientWidth = docEl.clientWidth;
+            if (clientWidth) {
+                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+            }
+        };
+        // Abort if browser does not support addEventListener
+        if (document.addEventListener) {
+            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+            window.addEventListener(resizeEvt, calculate_size, false);
+            document.addEventListener('DOMContentLoaded', calculate_size, false);
+            calculate_size();
+        }
+        $(function () {
+            WriteLog('', '', "VIEW", "浏览");
+            var documentHeight = $(document).height();
+            //alert(documentHeight);
+            $(".cInterd").height(documentHeight);
+            $(window).resize(function () {
+                var documentHeight = $(document).height();
+
+                $(".cInterd").height(documentHeight);
+            });
+
+            $(".sed-title").each(function () {
+                var html = this.innerHTML;
+                this.innerHTML = html.replace(/\®/g, "<sup>®</sup>").replace(/\©/g, "<sup>©</sup>");
+            });
+        });
+    </script>
+
+</body>
+
+</html>
