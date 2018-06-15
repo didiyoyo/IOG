@@ -448,7 +448,7 @@ namespace WEB.Controllers
         }
         
         /// <summary>
-        /// 获取接受函
+        /// 获取确认函
         /// </summary>
         /// <returns></returns>
         public ViewResult GetLetterOfAcceptance()
@@ -674,7 +674,7 @@ namespace WEB.Controllers
         }
         private bool SendEmailAPI( string email, string title, string meetingName, string DocName, string data)
         {
-            string Body = "<img src=\"http://vmeeting.bms.com.cn/IO/Content/images/ioemail2.png\"/>" +
+            string Body = "<img src=\"http://open.weixin.ecache.com.cn/IO/Content/images/ioemail2.png\"/>" +
                 "<p>尊敬的" + DocName + "医生：</p>" +
                 "<p>    感谢您参加" + meetingName + "，该会议资料下载地址如下：</p>" +
                 data +

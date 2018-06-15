@@ -559,9 +559,9 @@ background-size:100% 100%;
 	width: 100%;
     /*word-wrap: break-word;
     word-break: break-all;*/
-	overflow: hidden;
+	/*overflow: hidden;
 	text-overflow: ellipsis;
-white-space: nowrap;
+white-space: nowrap;*/
 
 }
 .file-time{

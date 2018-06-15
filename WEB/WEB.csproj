@@ -243,6 +243,8 @@
     <Content Include="Content\images\8%402x.png" />
     <Content Include="Content\images\a.png" />
     <Content Include="Content\images\aboutcopy%402x.png" />
+    <Content Include="Content\images\accepted%402x.png" />
+    <Content Include="Content\images\acceptHalfPic.png" />
     <Content Include="Content\images\acceptInvition%402x.png" />
     <Content Include="Content\images\acceptInvitionHalf%402x.png" />
     <Content Include="Content\images\adviseNumber%402x.png" />
@@ -321,8 +323,8 @@
     <Content Include="Content\images\jrhi.png" />
     <Content Include="Content\images\jx%402x.png" />
     <Content Include="Content\images\ld%402x.png" />
-    <Content Include="Content\images\lightBg%402x.png" />
     <Content Include="Content\images\meetingBody%402x.png" />
+    <Content Include="Content\images\meetingDocFull%402x.png" />
     <Content Include="Content\images\meetingFooter%402x.png" />
     <Content Include="Content\images\meetingHeader%402x.png" />
     <Content Include="Content\images\message%402x.png" />
@@ -397,7 +399,6 @@
     <Content Include="Content\images\xb%402x.png" />
     <Content Include="Content\images\xb1%402x.png" />
     <Content Include="Content\images\xb2%402x.png" />
-    <Content Include="Content\images\xbg%402x.png" />
     <Content Include="Content\images\xt%402x.png" />
     <Content Include="Content\images\xz%402x.png" />
     <Content Include="Content\images\yaoqi.png" />

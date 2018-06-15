@@ -6,7 +6,7 @@ using System.Web;
 namespace WEB.Model
 {
     /// <summary>
-    /// 接受函文本信息
+    /// 确认函文本信息
     /// </summary>
     public class LetterOfAcceptanceModel
     {

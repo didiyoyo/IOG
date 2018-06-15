@@ -71,14 +71,17 @@
     }
         .btnBox {
             position: fixed;
-            bottom: 0px;
+            bottom: .2rem;
             width: 100%;
             z-index: 100;
+            width: 100%;
+            text-align: center;
         }
 
         .btnGroup {
             display: flex;
             justify-content: center;
+            width: 100%;
         }
 
             .btnGroup img {
@@ -230,7 +233,9 @@
             {
                 if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && isAccept)
                 {
-                    <img src="~/Content/images/speechInfo@2x.png" alt="讲者简介" id="info" />
+                    //1、已结束采用灰色的已接受按钮
+                    <img src="~/Content/images/acceptHalfPic.png" alt="" id="resver" />
+                    <img src="~/Content/images/btn_jj@2x.png" alt="讲者简介" id="info" />
                 }
                 else
                 {
@@ -242,7 +247,8 @@
             {
                 if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && isAccept)
                 {
-
+                    //2、一个的已接受按钮
+                    <img src="~/Content/images/accepted@2x.png" alt="确认参会" id="resver" />
                 }
                 else
                 {
@@ -265,8 +271,8 @@
             {
                 <h6 id="license">
                     @*<input type="checkbox" id="accept" />*@
-                    @*<a href="/IO/Scripts/Pdf/web/viewer.html?file=Acceptance Note.pdf" style="color: #585151; text-decoration: none;">我已阅读<u>《接受函》</u>内容并接受</a>*@
-                    <a href="/IO/Meeting/GetLetterOfAcceptance" style="color: #585151; text-decoration: none;">我已阅读<u>《接受函》</u>内容并接受</a>
+                    @*<a href="/IO/Scripts/Pdf/web/viewer.html?file=Acceptance Note.pdf" style="color: #585151; text-decoration: none;">我已阅读<u>《确认函》</u>内容并接受</a>*@
+                    <a href="/IO/Meeting/GetLetterOfAcceptance" style="color: #585151; text-decoration: none; ">我已阅读<u>《确认函》</u>内容并接受</a>
 
                 </h6>
             }
@@ -276,29 +282,29 @@
 
     <script>
 
-                if (!navigator.userAgent.match(/iPad|iPhone/i)) {
-                    $('.objf').attr('scrolling', 'yes');
-                }
+                        if (!navigator.userAgent.match(/iPad|iPhone/i)) {
+                            $('.objf').attr('scrolling', 'yes');
+                        }
 
 
-        click_log($("#mid").val(), "查看邀请函", null)
-        var calculate_size = function () {
-            var BASE_FONT_SIZE = 100,
-                docEl = document.documentElement,
-                clientWidth = docEl.clientWidth;
-            if (clientWidth) {
-                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
-            }
-        };
-        // Abort if browser does not support addEventListener
-        if (document.addEventListener) {
-            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
-            window.addEventListener(resizeEvt, calculate_size, false);
-            document.addEventListener('DOMContentLoaded', calculate_size, false);
-            calculate_size();
-        }
-        $(function () {
-            WriteLog('@ViewBag.mid', '', "VIEW", "浏览");
+                        click_log($("#mid").val(), "查看邀请函", null)
+                        var calculate_size = function () {
+                            var BASE_FONT_SIZE = 100,
+                                docEl = document.documentElement,
+                                clientWidth = docEl.clientWidth;
+                            if (clientWidth) {
+                                docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+                            }
+                        };
+                        // Abort if browser does not support addEventListener
+                        if (document.addEventListener) {
+                            var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+                            window.addEventListener(resizeEvt, calculate_size, false);
+                            document.addEventListener('DOMContentLoaded', calculate_size, false);
+                            calculate_size();
+                        }
+                        $(function () {
+                            WriteLog('@ViewBag.mid', '', "VIEW", "浏览");
 
             var bodHeight = $("body").height();
             //$(".objf").height(bodHeight);
@@ -317,7 +323,7 @@
             });
             $("#resver").click(function () {
                 //if (!$('#accept').attr('checked')) {
-                //    return alert('请先阅读《接受函》并勾选');
+                //    return alert('请先阅读《确认函》并勾选');
                 //}
                 click_log($("#mid").val(), "参加会议", function () {
                     $.ajax({
@@ -325,7 +331,8 @@
                         type: "post",
                         data: { "MId": $("#mid").val(), "State": 1 },
                         success: function (r) {
-                            console.log(r);
+                            if (r.success) {
+
                             if ($('#MeetingMode').val() == '3') {
                                 layer.open({
                                     content: "会议预约成功。</br>会务组将和您的手机号@(string.IsNullOrEmpty(userInfo.mobile)?"":(userInfo.mobile.Substring(0,3)+"****"+userInfo.mobile.Substring(7,4)))联系。请注意接听来电。",
@@ -345,6 +352,10 @@
                                         window.location.href = "/IO/Meeting/Index/1";
                                     }
                                 });
+                            }
+                            }
+                            else {
+                                window.location.href = "/IO/Meeting/Index/1";
                             }
 
                         },
