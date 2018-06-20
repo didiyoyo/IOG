@@ -1,4 +1,5 @@
 ﻿@using Services.Models;
+@using WEB.Model
 @{
     Layout = null;
     var doctorShcdule = ViewBag.DoctorSchedule as travel_information;
@@ -7,68 +8,36 @@
     var date_stay = doctorShcdule.date_stay;
     var departure_date = doctorShcdule.departure_date;
     var return_departuretime = doctorShcdule.return_departuretime;
-    Dictionary<int, List<string>> shcdule = new Dictionary<int, List<string>>();
-    int loopCount = 0;
-    if (departuretime.HasValue)
+    List<DoctorTimeInfo> timeInfo = new List<DoctorTimeInfo>() {
+        new DoctorTimeInfo{
+            Name="departuretime",
+            Time=departuretime
+        },
+        new DoctorTimeInfo
+        {
+            Name="date_stay",
+            Time=date_stay
+        },
+        new DoctorTimeInfo
+        {
+            Name="departure_date",
+            Time=departure_date
+        },
+        new DoctorTimeInfo
+        {
+            Name="return_departuretime",
+            Time=return_departuretime
+        }
+    };
+    //Dictionary<int, List<string>> shcdule = new Dictionary<int, List<string>>();
+    var timeGroup = timeInfo.Where(m => m.Time.HasValue).GroupBy(m => new { time = m.Time.Value.Date }, (Station, StationGroup) => new DoctorTimeGroupModel
     {
-        loopCount++;
-        shcdule[loopCount] = new List<string>();
-        shcdule[loopCount].Add("departuretime");
-        if (date_stay.HasValue)
-        {
-            if (date_stay.Value.Date != departuretime.Value.Date)
-            {
-                loopCount++;
-                shcdule[loopCount] = new List<string>();
-                shcdule[loopCount].Add("date_stay");
-            }
-            else
-            {
-                shcdule[loopCount].Add("date_stay");
-            }
-            if (departure_date.HasValue)
-            {
-                if (departure_date.Value.Date != date_stay.Value.Date)
-                {
-                    loopCount++;
-                    shcdule[loopCount] = new List<string>();
-                    shcdule[loopCount].Add("departure_date");
-                }
-                else
-                {
-                    shcdule[loopCount].Add("departure_date");
-                }
-                if (return_departuretime.HasValue)
-                {
-                    if (return_departuretime.Value.Date != departure_date.Value.Date)
-                    {
-                        loopCount++;
-                        shcdule[loopCount] = new List<string>();
-                        shcdule[loopCount].Add("return_departuretime");
-                    }
-                    else
-                    {
-                        shcdule[loopCount].Add("return_departuretime");
-                    }
-                }
-                else
-                {
-
-                }
-            }
-            else
-            {
-
-            }
-        }
-        else
-        {
-
-        }
-    }
+        Name = Station.time.ToString(),
+        GroupList = StationGroup.Select(m => m.Name).ToList()
+    }).ToList();
 
     var meeting = ViewBag.Meeting as md_seminar_meeting_main;
-}
+    }
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,12 +67,10 @@
     @*<p class="num">
             <img src="~/Content/images/adviseNumber@2x.png" alt="指定号码" />
         </p>*@
-    @foreach (var key in shcdule.Keys)
+    @foreach (var key in timeGroup)
     {
         <section>
-            @if (shcdule[key] != null)
-            {
-                switch (shcdule[key][0])
+                @switch (key.GroupList[0])
                 {
                     case "departuretime":
                         <div class='left'><p>@doctorShcdule.departuretime.Value.Day.</p><p>@doctorShcdule.departuretime.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
@@ -118,9 +85,8 @@
                         <div class='left'><p>@doctorShcdule.return_departuretime.Value.Day.</p><p>@doctorShcdule.return_departuretime.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
                         break;
                 }
-            }
             <div class='right'>
-                @foreach (var item in shcdule[key])
+                @foreach (var item in key.GroupList)
                 {
                 <!-- 出行工具飞机：flight  火车：train   酒店住宿：hotel -->
                 <!-- 出行模版 -->

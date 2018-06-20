@@ -80,7 +80,7 @@
 
             <div class="doctor">
                 <div class='l'>
-                    <img src="@userInfo.avatar" class='doctorPic'>
+                    <img src="@(string.IsNullOrEmpty(userInfo.avatar)?"/IO/Content/images/touxiang.jpg":userInfo.avatar)" class='doctorPic'>
                     <!-- 认证医生的v 如果没有认证不需要此标签 -->
                     @if (userInfo.statusCode == "Accepted")
                 {
@@ -108,7 +108,7 @@
 
             <div class="doctor">
                 <div class='l'>
-                    <img src="@userInfo.avatar" class='doctorPic'>
+                    <img src="@(string.IsNullOrEmpty(userInfo.avatar)?"/IO/Content/images/touxiang.jpg":userInfo.avatar)" class='doctorPic'>
                     <!-- 认证医生的v 如果没有认证不需要此标签 -->
                     @if (userInfo.statusCode == "Accepted")
                 {
