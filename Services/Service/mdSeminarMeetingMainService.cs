@@ -33,7 +33,7 @@ namespace Services.Service
             using (DBContext db = new DBContext())
             {
                 var ids = db.td_seminar_meeting_accept.Where(x => x.OPenID == openId && x.State == 1).Select(x => x.MId).ToArray();
-                var list = db.md_seminar_meeting_main.Where(x => ids.Contains(x.mid)).OrderBy(x => x.mbegintime).ToList();
+                var list = db.md_seminar_meeting_main.Where(x => ids.Contains(x.mid)&&x.Type!=1).OrderBy(x => x.mbegintime).ToList();
                 return list;
             }
         }

@@ -204,6 +204,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AuthorizationController.cs" />
     <Compile Include="Controllers\DocumentHandlerController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ThirdpartyController.cs" />
     <Compile Include="Controllers\ClickLogController.cs" />
     <Compile Include="Controllers\DataController.cs" />
@@ -845,6 +846,7 @@
     <Content Include="Views\Meeting\MeetingScheduleToLargeUnderLine.cshtml" />
     <Content Include="Views\Meeting\MeetingInfoToLargeUnderLine.cshtml" />
     <Content Include="Views\Meeting\LetterOfAcceptance.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

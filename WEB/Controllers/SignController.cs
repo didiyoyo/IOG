@@ -43,7 +43,19 @@ namespace WEB.Controllers
         public ActionResult Success(int id)
         {
             mdSeminarMeetingMainService service = new mdSeminarMeetingMainService();
-            var meeting = service.GetMeetingById(id);
+            md_seminar_meeting_main meeting = null;
+            try
+            {
+                meeting = service.GetMeetingById(id);
+                if (meeting==null||meeting.Type == 1)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Error");
+            }
             ViewBag.Meeting = meeting;
             string openid = Session["openid"].ToString();
             UserInfoService userInfoService = new UserInfoService();
@@ -87,7 +99,19 @@ namespace WEB.Controllers
                     {
                         if(userInfo.statusCode == "Accepted"|| userInfo.statusCode == "Registed"|| userInfo.statusCode== "Undetermined")
                         {
-                            var meeting = db.md_seminar_meeting_main.AsNoTracking().Where(x => x.mid == qrCode.meetingid.Value).SingleOrDefault();
+                            md_seminar_meeting_main meeting = null;
+                            try
+                            {
+                                meeting = db.md_seminar_meeting_main.AsNoTracking().Where(x => x.mid == qrCode.meetingid.Value).SingleOrDefault();
+                                if (meeting == null || meeting.Type == 1)
+                                {
+                                    return RedirectToAction("Index", "Error");
+                                }
+                            }
+                            catch(Exception ex)
+                            {
+                                return RedirectToAction("Index", "Error");
+                            }
                             var workId = db.sfe_register.FirstOrDefault(r => r.doc_code == userInfo.doctorCode)?.NETWORK_EXTERNAL_ID_BMS_CN__C;
                             var inportInfo = db.table_input.FirstOrDefault(t => t.networkid == workId && t.mcode == meeting.mcode && t.ModelType == "邀请文件");
                             //非后台导入的大型线下会议直接跳转到签到成功页面

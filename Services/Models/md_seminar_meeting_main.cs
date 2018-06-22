@@ -80,5 +80,11 @@ namespace Services.Models
         public string chairman { get; set; }
 
         public int? pushCount { get; set; }
+
+        /// <summary>
+        /// 会议类型0正常1取消
+        /// </summary>
+        [Display(Name = "会议状态")]
+        public int? Type { get; set; }
     }
 }

@@ -139,7 +139,19 @@ namespace WEB.Controllers
         public ActionResult MeetingSchedule(int id)
         {
             ViewBag.mid = id;
-            var meeting = smm.GetMeetingById(id);
+            md_seminar_meeting_main meeting = null;
+            try
+            {
+                meeting = smm.GetMeetingById(id);
+                if (meeting==null||meeting.Type == 1)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+            catch(Exception ex)
+            {
+                return RedirectToAction("Index", "Error");
+            }
             UserInfoService userInfoService = new UserInfoService();
             var userInfo = userInfoService.SelectByOpenid(Session["openid"].ToString());
             ViewBag.Userinfo = userInfo;
@@ -199,7 +211,19 @@ namespace WEB.Controllers
         /// <returns></returns>
         public ActionResult DoctorSchedule(int mid)
         {
-            var meeting = smm.GetMeetingById(mid);
+            md_seminar_meeting_main meeting = null;
+            try
+            {
+                meeting = smm.GetMeetingById(mid);
+                if (meeting==null|| meeting.Type == 1)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Error");
+            }
             UserInfoService userInfoService = new UserInfoService();
             var userInfo = userInfoService.SelectByOpenid(Session["openid"].ToString());
             using (var context=new DBContext())
@@ -435,11 +459,23 @@ namespace WEB.Controllers
 
         public ActionResult DataList(int id)
         {
+            md_seminar_meeting_main meeting = null;
+            try
+            {
+                meeting = smm.GetMeetingById(id);
+                if (meeting==null|| meeting.Type == 1)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Error");
+            }
             string hosturl = System.Configuration.ConfigurationManager.ConnectionStrings["url"].ConnectionString;
             ViewBag.hosturl = hosturl;
             var OpenID = Session["openid"].ToString();
             var user = new UserInfoService().SelectByOpenid(OpenID);
-            var meeting = smm.GetMeetingById(id);
             var list = mds.GetMeetingDataByMid(id);
             ViewBag.mTitle = meeting.mtitle;
             ViewBag.mid = id;
