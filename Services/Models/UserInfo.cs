@@ -42,6 +42,7 @@ namespace Services.Models
         public string wechatNickname { get; set; }
         public string username { get; set; }
         public int? subscribeTime { get; set; }
+        public int? isInterior { get; set; }
     }
 
 }

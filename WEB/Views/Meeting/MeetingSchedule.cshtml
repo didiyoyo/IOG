@@ -10,11 +10,7 @@
     {
         meetingShceduleInfo = ViewBag.MeetingScheduleInfo as List<MeetingScheduleInfo>;
     }
-    bool isAccept = false;
-    if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine)
-    {
-        isAccept = Convert.ToBoolean(ViewBag.IsAccept);
-    }
+    bool isAccept = Convert.ToBoolean(ViewBag.IsAccept);
     var isImport = (bool)ViewBag.IsImport;
     var userInfo = ViewBag.Userinfo as UserInfo;
 }
@@ -141,7 +137,7 @@
                 <div style="-webkit-overflow-scrolling:touch; overflow: scroll; height: 100vh">
                     <iframe id="objf" class="objf" src="" scrolling="no" frameborder="0" style="width: 1px; min-width: 100%; *width: 100%;"></iframe>
                 </div>
-                    <script>
+                <script>
                     if ("@Model.mhyrc_url".indexOf("http") < 0 && "@Model.mhyrc_url".indexOf("https") < 0) {
                         layer.open({ content: "会议日程地址不正确" });
                     } else {
@@ -149,7 +145,7 @@
                     }
                      $("#inv-main1").css("display", "none");
 
-                    </script>
+                </script>
 
                 if (ViewBag.mid == 21)
                 {
@@ -231,11 +227,13 @@
                 @*<img src="~/Content/images/btn-yy.png" alt="预约参会" id="resver" />*@
             if (!string.IsNullOrEmpty(Model.doctorimg) || !string.IsNullOrEmpty(Model.doctorurl))
             {
-                if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && isAccept)
+                if (isAccept)
                 {
                     //1、已结束采用灰色的已接受按钮
                     <img src="~/Content/images/acceptHalfPic.png" alt="" id="resver" />
                     <img src="~/Content/images/btn_jj@2x.png" alt="讲者简介" id="info" />
+                    @*<img src="~/Content/images/speechInfo@2x.png" alt="讲者简介" id="info" />*@
+
                 }
                 else
                 {
@@ -245,7 +243,7 @@
             }
             else
             {
-                if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && isAccept)
+                if ( isAccept)
                 {
                     //2、一个的已接受按钮
                     <img src="~/Content/images/accepted@2x.png" alt="确认参会" id="resver" />
@@ -263,7 +261,7 @@
         }
         else
         {
-            if (Model.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && isAccept)
+            if (isAccept)
             {
 
             }

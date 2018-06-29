@@ -73,7 +73,8 @@ namespace Services.Service
                     userInfo.therapeuticArea == newinfo.therapeuticArea &&
                     userInfo.wechatNickname == newinfo.wechatNickname &&
                     userInfo.subscribeTime == newinfo.subscribeTime &&
-                    userInfo.username == newinfo.username)
+                    userInfo.username == newinfo.username&&
+                    userInfo.isInterior==newinfo.isInterior)
                     {
                         return;
                     }
@@ -106,6 +107,7 @@ namespace Services.Service
                     userInfo.therapeuticArea = newinfo.therapeuticArea;
                     userInfo.wechatNickname = newinfo.wechatNickname;
                     userInfo.username = newinfo.username;
+                    userInfo.isInterior = newinfo.isInterior;
                     this.Update(userInfo);
                 }
             }

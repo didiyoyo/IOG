@@ -178,13 +178,9 @@ namespace WEB.Controllers
                     }
                     context.SaveChanges();
                 }
-
-                if (meeting.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine)
-                {
-                    var openid = Session["openid"].ToString();
-                    var accept = context.td_seminar_meeting_accept.FirstOrDefault(a => a.OPenID == openid && a.MId == meeting.mid);
-                    ViewBag.IsAccept = accept != null;
-                }
+                var openid = Session["openid"].ToString();
+                var accept = context.td_seminar_meeting_accept.FirstOrDefault(a => a.OPenID == openid && a.MId == meeting.mid);
+                ViewBag.IsAccept = accept != null;
             }
             if (meeting.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && meeting.mhyrc_type == "2")
             {

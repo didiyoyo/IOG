@@ -317,18 +317,21 @@ namespace WEB.Controllers
                         }
                         else
                         {
-                            if (meeting == null)//会议不存在
+                            if (meeting == null|| meeting.Type==1)//会议不存在
                             {
-                                if (userInfo.statusCode.Equals("Accepted"))//已认证跳转到我的会议页面
-                                {
-                                    Response.Redirect("/IO/Meeting/Index");
-                                    Response.End();
-                                }
-                                else//未认证跳转到登录页面
-                                {
-                                    Response.Redirect(url + "/portal/wechat/login");
-                                    Response.End();
-                                }
+                                //if (userInfo.statusCode.Equals("Accepted"))//已认证跳转到我的会议页面
+                                //{
+                                //    Response.Redirect("/IO/Meeting/Index");
+                                //    Response.End();
+                                //}
+                                //else//未认证跳转到登录页面
+                                //{
+                                //    Response.Redirect(url + "/portal/wechat/login");
+                                //    Response.End();
+                                //}
+                                Response.Redirect("/IO/Error/Index");
+                                Response.End();
+                                return;
                             }
                             if (qrCode.type == 2)//会议互动，只要没有过期都可以进去
                             {

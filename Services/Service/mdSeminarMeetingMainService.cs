@@ -165,7 +165,8 @@ namespace Services.Service
                                 survey.sstate = 1;
                             }
                             db.Commit();
-                            foreach (var m in db.td_seminar_meeting_accept.Where(x => x.MId == meeting.mid).ToList())
+                            var openList = db.td_seminar_meeting_accept.Where(x => x.MId == meeting.mid).Select(accept=>accept.OPenID).ToList().Union(db.MeetingSign.Where(m=>m.meetingid==meeting.mid).Select(m=>m.openid).ToList()).ToList();
+                            foreach (var openId in openList)
                             {
                                 try
                                 {
@@ -173,7 +174,7 @@ namespace Services.Service
                                     //发送消息
                                     var res = WeiXinTool.sendTemplateMessage(AppID, accessToken, new
                                     {
-                                        touser = m.OPenID,
+                                        touser = openId,
                                         template_id = System.Configuration.ConfigurationManager.ConnectionStrings["SurveytmpKey"].ConnectionString,
                                         url = System.Configuration.ConfigurationManager.ConnectionStrings["Host"].ConnectionString + "Authorization/SurveyData/" + meeting.mid,
                                         data = new
