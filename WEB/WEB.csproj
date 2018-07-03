@@ -847,6 +847,7 @@
     <Content Include="Views\Meeting\MeetingInfoToLargeUnderLine.cshtml" />
     <Content Include="Views\Meeting\LetterOfAcceptance.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Survey\AlreadySurveyPrompt.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

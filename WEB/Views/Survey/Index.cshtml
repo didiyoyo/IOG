@@ -26,6 +26,20 @@
         .btn-container #submit {
             margin-bottom: 1rem;
         }
+
+        .inputArea {
+            width: 100%;
+            height: 2.5rem;
+            overflow-y: scroll;
+            resize: none;
+            box-sizing: border-box;
+            padding: .2rem;
+            font-size: .3rem;
+            line-height: .35rem;
+            border: 1px solid #e5edef;
+            background: #e5edef;
+            -webkit-appearance: none;
+        }
     </style>
 </head>
 <body>
@@ -42,29 +56,33 @@
                         <div class="choice-title" data-mid="@list[index].mid" data-value="@list[index].stype" data-id="@list[index].sid">
                             <p id="brand">
                                 <span class="num">@(index + 1)</span>
-                                <span class="text">@list[index].stitle @(list[index].stype == 1 ? "(多选)" : "(单选)")</span>
+                                <span class="text">@list[index].stitle @(list[index].stype == 1 ? "(多选)" :(list[index].stype == 0? "(单选)" :"(填空)") )</span>
                             </p>
                             <ul>
-                                @if (list[index].sanswer != null)
+                                @if (list[index].stype == 0|| list[index].stype==1)
                                 {
-                                    string[] ans = list[index].sanswer.Split('|');
-                                    for (int i = 0; i < ans.Length; i++)
+                                    if (list[index].sanswer != null)
                                     {
-                                        //选中状态添加selected
-                                        <li class="chioced clearfix">
-                                            @*选中状态改为checkdbtn*@
-                                            <div class="checkbtn" data-value="@ans[i]" data-id="@list[index].sid"></div>
-                                            <p>@ans[i]</p>
-                                        </li>
+                                        string[] ans = list[index].sanswer.Split('|');
+                                        for (int i = 0; i < ans.Length; i++)
+                                        {
+                                            //选中状态添加selected
+                                            <li class="chioced clearfix">
+                                                @*选中状态改为checkdbtn*@
+                                                <div class="checkbtn" data-value="@ans[i]" data-id="@list[index].sid"></div>
+                                                <p>@ans[i]</p>
+                                            </li>
+                                        }
                                     }
-
+                                }
+                                else
+                                {
+                                    <textarea class="inputArea" placeholder="请输入内容，最多100个字" data-id="@list[index].sid" maxlength="100"></textarea>
                                 }
                             </ul>
-
                             @*<input type="text" name="name" class="chioced" value="" placeholder="请填写答案"/>*@
                         </div>
                     </div>
-
                 }
                 <div class="btn-container"><input id="submit" type="button" class="btn nexttitle" onclick="AddSurvey()" /></div>
             </div>
@@ -140,6 +158,11 @@
                 $(this).find(".checkdbtn").each(function () {
                     result.push($(this).attr("data-value"));
                 });
+
+                $(this).find(".inputArea").each(function () {
+                    result.push($(this).val());
+                });
+
                 obj.push({
                     sid: sid,
                     sresult: result.toString().replace(/\,/g, "^")

@@ -71,6 +71,11 @@ namespace WEB.Controllers
             Response.Redirect("/IO/Authorization/MyDoctorSchedule/" + id);
         }
 
+        public void MeetingSurvey(int id)
+        {
+            Response.Redirect("/IO/Authorization/MeetingSurvey/" + id);
+        }
+
         public ActionResult GetWeiXinInfo(string id)
         {
             OpenweixinService service = new OpenweixinService();

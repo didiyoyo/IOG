@@ -70,5 +70,14 @@ namespace WEB.Controllers
             }
 
         }
+
+        /// <summary>
+        /// 已经调研提醒
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AlreadySurveyPrompt()
+        {
+            return View();
+        }
     }
 }

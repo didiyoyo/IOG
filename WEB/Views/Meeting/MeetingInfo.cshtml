@@ -166,7 +166,7 @@
         <img src="/IO/Content/images/io@2x.png" class='topImg'>
         <div class="body">
             <div class="info">
-                @if (Model.introduction != null)
+                @if (!string.IsNullOrEmpty(Model.introduction))
                 {
                     <h5>会议简介：</h5>
                     <h6 class='top'>@Model.introduction</h6>

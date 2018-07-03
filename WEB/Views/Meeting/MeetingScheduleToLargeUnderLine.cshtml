@@ -75,6 +75,7 @@
     <input id="mid" type="hidden" value="@(Model.mid)" />
     <input id="MeetingMode" type="hidden" value="@Model.meetingmode" />
     <input id="doctortype" type="hidden" value="@Model.doctortype" />
+    <input id="isAccept" type="hidden" value="@isAccept.ToString()" />
     <div class="title" id='title'>
         @Model.mtitle
     </div>
@@ -273,7 +274,19 @@
                             }
                             }
                             else {
-                                window.location.href = "/IO/Meeting/Index/1";
+                                if ($('#isAccept').val()=='True'){
+                                    window.location.href = "/IO/Meeting/Index/1";
+                                }
+                                else {
+                                    layer.open({
+                                        content: r.msg,
+                                        btn: 'OK',
+                                        yes: function () {
+                                            layer.closeAll();
+                                            window.location.href = "/IO/Meeting/Index/1";
+                                        }
+                                    });
+                                }
                             }
 
                         },

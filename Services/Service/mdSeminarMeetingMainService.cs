@@ -157,7 +157,7 @@ namespace Services.Service
                         string accessToken = number.access_token;
                         DateTime start = DateTime.Now.AddDays(-1);
                         //DateTime end = start.AddMinutes(30);&& x.mendtime < end
-                        foreach (var meeting in db.md_seminar_meeting_main.Where(x => x.mendtime < start  && db.md_seminar_survey.Any(s => s.mid == x.mid && s.sstate == 0)).ToList())
+                        foreach (var meeting in db.md_seminar_meeting_main.Where(x => x.mendtime < start&&x.meetingmode!= (int)MeetingModeTypeEnum.LargeUnderLine && db.md_seminar_survey.Any(s => s.mid == x.mid && s.sstate == 0)).ToList())
                         {
                             log.Info("开启调研"+meeting.mid);
                             foreach (var survey in db.md_seminar_survey.Where(s => s.mid == meeting.mid && s.sstate == 0))

@@ -227,6 +227,71 @@ namespace WEB.Controllers
             }
         }
 
+        [PermissionsAttribute(false)]
+        public void MeetingSurvey(int id)
+        {
+            if (Session["openid"] == null)
+            {
+                Response.Redirect(OpenWeiXinTools.getWebAuthUrl(System.Configuration.ConfigurationManager.ConnectionStrings["weixin.AppID"].ConnectionString, Request.Url.ToString(), ""));
+                return;
+            }
+            else
+            {
+                string url = System.Configuration.ConfigurationManager.ConnectionStrings["url"].ConnectionString;
+
+                UserInfoService userInfoService = new UserInfoService();
+                mdSeminarMeetingMainService mdseminarMeetingMainService = new mdSeminarMeetingMainService();
+                UserInfo userInfo = new UserInfo();
+                try
+                {
+                    userInfo = userInfoService.SelectByOpenid(Session["openid"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    log.Info("获取用户信息失败！");
+                    log.Error(ex);
+                    Response.Redirect(url + "/portal/wechat/login");
+                    Response.End();
+                    return;
+                }
+                if (userInfo == null)//未获取到用户信息
+                {
+                    Response.Redirect("/IO/WeiXin/Error/获取用户信息错误！");
+                    Response.End();
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(userInfo.statusCode))
+                {
+                    Response.Redirect(url + "/portal/wechat/login");
+                    Response.End();
+                }
+                else if (userInfo.statusCode.Equals("Accepted") || userInfo.statusCode.Equals("Undetermined") || userInfo.statusCode.Equals("Rejected"))
+                {
+                    using (DBContext db = new DBContext())
+                    {
+                        var survayIdList = db.md_seminar_survey.Where(s => s.mid == id).Select(s=>s.sid).ToList();
+                        var session = Session["openid"].ToString();
+                        var survayResultList = db.td_seminar_survey_result.FirstOrDefault(sr => survayIdList.Contains(sr.sid) && sr.uid == session);
+                        if (survayResultList != null)
+                        {
+                            Response.Redirect("/IO/Survey/AlreadySurveyPrompt");
+                            Response.End();
+                        }
+                        else
+                        {
+                            Response.Redirect("/IO/Survey/Index?id=" + id);
+                            Response.End();
+                        }
+                    }
+                }
+                else//未认证跳转到登录页面
+                {
+                    Response.Redirect(url + "/portal/wechat/login");
+                    Response.End();
+                }
+            }
+        }
+
         /// <summary>
         /// 二维码页面，所有入口
         /// </summary>

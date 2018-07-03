@@ -94,6 +94,7 @@
     <input id="EndTime" type="hidden" value="@ViewBag.EndTime" />
     <input id="MeetingMode" type="hidden" value="@Model.meetingmode" />
     <input id="doctortype" type="hidden" value="@Model.doctortype" />
+    <input id="isAccept" type="hidden" value="@isAccept.ToString()" />
     @* <section class="" style="height: 100vh; overflow: hidden;">*@
     @if (Model.mhyrc_type == "0" || Model.mhyrc_type == "1" || Model.mhyrc_type == null)
     {
@@ -186,6 +187,15 @@
                     <h6>@Model.mbegintime.Value.ToString("MM月dd日 HH:mm") &nbsp;--&nbsp; @Model.mendtime.Value.ToString("MM月dd日 HH:mm")</h6>
                     <h5>会议地点：</h5>
                     <h6>@Model.msite</h6>
+
+                    @if (!string.IsNullOrEmpty(Model.chairman))
+                    {
+                        <h6 class='listItem chairman'><span class="listL">主席：</span><span class="listR">@(Model.chairman)</span></h6>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.speakers))
+                    {
+                        <h6 class='listItem speecher'><span class="listL">讲者：</span><span class="listR">@Html.Raw(Model.speakers)</span></h6>
+                    }
                 </div>
                 @foreach (var meetingSchedule in meetingShceduleInfo)
                 {
@@ -353,7 +363,20 @@
                             }
                             }
                             else {
-                                window.location.href = "/IO/Meeting/Index/1";
+                                if ($('#isAccept').val()=='True') {
+                                    window.location.href = "/IO/Meeting/Index/1";
+                                }
+                                else {
+                                    layer.open({
+                                        content: r.msg,
+                                        btn: 'OK',
+                                        yes: function () {
+                                            layer.closeAll();
+                                            window.location.href = "/IO/Meeting/Index/1";
+                                        }
+                                    });
+                                }
+                                
                             }
 
                         },
