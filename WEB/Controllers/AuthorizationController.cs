@@ -269,6 +269,12 @@ namespace WEB.Controllers
                 {
                     using (DBContext db = new DBContext())
                     {
+                        var meeting = db.md_seminar_meeting_main.FirstOrDefault(m => m.mid == id);
+                        if (meeting == null||meeting.Type==1)
+                        {
+                            Response.Redirect("/IO/Error/Index");
+                            Response.End();
+                        }
                         var survayIdList = db.md_seminar_survey.Where(s => s.mid == id).Select(s=>s.sid).ToList();
                         var session = Session["openid"].ToString();
                         var survayResultList = db.td_seminar_survey_result.FirstOrDefault(sr => survayIdList.Contains(sr.sid) && sr.uid == session);
@@ -422,7 +428,7 @@ namespace WEB.Controllers
                                 }
                                 else if (userInfo.statusCode.Equals("Rejected") || userInfo.statusCode.Equals("Undetermined"))//已注册的跳转到会议邀请码页面
                                 {
-                                    if (meeting.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && userInfo.statusCode.Equals("Undetermined") && (qrCode.type == 4 || qrCode.type == 1))
+                                    if (meeting.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && (userInfo.statusCode.Equals("Undetermined")||(userInfo.statusCode.Equals("Rejected"))) && (qrCode.type == 4 || qrCode.type == 1))
                                     {
                                         Response.Redirect("/IO/Meeting/MeetingSchedule/" + qrCode.meetingid);
                                         Response.End();

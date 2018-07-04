@@ -150,6 +150,7 @@
     }
 
         function AddSurvey() {
+            layer.open({ type: 2, shadeClose: false });
             var obj = [];
             var _select = [];
             $(".choice-title").each(function () {
@@ -211,6 +212,7 @@
                     }
                 },
                 error: function (r) {
+                    layer.closeAll();
                     console.log(r.responseText);
                 }
             });

@@ -92,11 +92,11 @@
         }
     </h6>
     <h6 class='listItem place'>
-        <span class="listL">地点：</span><span class="listR">@Model.msite</span>
+        <span class="listL">地点：</span><span class="listR">@Html.Raw(Model.msite)</span>
     </h6>
     @if (!string.IsNullOrEmpty(Model.chairman))
     {
-        <h6 class='listItem chairman'><span class="listL">主席：</span><span class="listR">@(Model.chairman)</span></h6>
+        <h6 class='listItem chairman'><span class="listL">主席：</span><span class="listR">@Html.Raw(Model.chairman)</span></h6>
     }
     @if (!string.IsNullOrEmpty(Model.speakers))
     {
@@ -111,7 +111,7 @@
         <!-- 会议简介 需要根据判断是否渲染 -->
         <div class='meetingInfo'>
             <h5 class="head"></h5>
-            <h6 class='meetingDesc'>@Model.introduction</h6>
+            <h6 class='meetingDesc'>@Html.Raw(Model.introduction)</h6>
             <h5 class="foot"></h5>
         </div>
     }
@@ -133,8 +133,8 @@
                         <!-- 循环每个时段项目 -->
                         <div class="line">
                             <h6 class="l">@agenda.time</h6>
-                            <h6 class="c">@agenda.schedule</h6>
-                            <h6 class="r">@agenda.name</h6>
+                            <h6 class="c">@Html.Raw(agenda.schedule)</h6>
+                            <h6 class="r">@Html.Raw(agenda.name)</h6>
                         </div>
                     }
                 </div>

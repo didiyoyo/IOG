@@ -181,20 +181,22 @@
                     @if (!string.IsNullOrEmpty(Model.introduction))
                     {
                         <h5>会议简介：</h5>
-                        <h6 class='top'>@Model.introduction</h6>
+                        <h6 class='top'>@Html.Raw(Model.introduction)</h6>
                     }
                     <h5>会议时间：</h5>
                     <h6>@Model.mbegintime.Value.ToString("MM月dd日 HH:mm") &nbsp;--&nbsp; @Model.mendtime.Value.ToString("MM月dd日 HH:mm")</h6>
                     <h5>会议地点：</h5>
-                    <h6>@Model.msite</h6>
+                    <h6>@Html.Raw(Model.msite)</h6>
 
                     @if (!string.IsNullOrEmpty(Model.chairman))
                     {
-                        <h6 class='listItem chairman'><span class="listL">主席：</span><span class="listR">@(Model.chairman)</span></h6>
+                        <h5>主席：</h5>
+                        <h6>@Html.Raw(Model.chairman)</h6>
                     }
                     @if (!string.IsNullOrEmpty(Model.speakers))
                     {
-                        <h6 class='listItem speecher'><span class="listL">讲者：</span><span class="listR">@Html.Raw(Model.speakers)</span></h6>
+                        <h5>讲者：</h5>
+                        <h6>@Html.Raw(Model.speakers)</h6>
                     }
                 </div>
                 @foreach (var meetingSchedule in meetingShceduleInfo)
@@ -211,8 +213,8 @@
                         {
                             <div class="list">
                                 <div class="l">@agenda.time</div>
-                                <div class="c">@agenda.schedule</div>
-                                <div class="r">@agenda.name</div>
+                                <div class="c">@Html.Raw(agenda.schedule)</div>
+                                <div class="r">@Html.Raw(agenda.name)</div>
                             </div>
                         }
                     </div>

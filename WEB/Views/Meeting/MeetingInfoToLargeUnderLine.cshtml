@@ -9,6 +9,50 @@
         meetingShceduleInfo = ViewBag.MeetingScheduleInfo as List<MeetingScheduleInfo>;
     }
 
+    string voteImage = "";
+    if (Model.vote)
+    {
+        if (Model.live || ViewBag.IsData == "true")
+        {
+            voteImage = "voteSemicircle";
+        }
+        else
+        {
+            voteImage = "voteCircle";
+        }
+    }
+    string liveImage = "";
+    if (Model.live)
+    {
+        if (Model.vote && ViewBag.IsData == "true")
+        {
+            liveImage = "live";
+        }
+        else if (Model.vote && ViewBag.IsData != "true")
+        {
+            liveImage = "leftCircleLive";
+        }
+        else if (!Model.vote && ViewBag.IsData == "true")
+        {
+            liveImage = "rightCircleLive";
+        }
+        else if (!Model.vote && ViewBag.IsData != "true")
+        {
+            liveImage = "circleLive";
+        }
+    }
+    string isDataImage = "";
+    if (ViewBag.IsData == "true")
+    {
+        if (Model.vote || Model.live)
+        {
+            isDataImage = "isDataSemicircle";
+        }
+        else
+        {
+            isDataImage = "isDataCircle";
+        }
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -75,11 +119,11 @@
         <span class="listL">时间：</span><span class="listR">@Model.mbegintime.Value.ToString("MM月dd日 HH:mm") &nbsp;--&nbsp; @Model.mendtime.Value.ToString("MM月dd日 HH:mm")</span>
     </h6>
     <h6 class='listItem place'>
-        <span class="listL">地点：</span><span class="listR">@Model.msite</span>
+        <span class="listL">地点：</span><span class="listR">@Html.Raw(Model.msite)</span>
     </h6>
     @if (!string.IsNullOrEmpty(Model.chairman))
     {
-        <h6 class='listItem chairman'><span class="listL">主席：</span><span class="listR">@(Model.chairman)</span></h6>
+        <h6 class='listItem chairman'><span class="listL">主席：</span><span class="listR">@Html.Raw(Model.chairman)</span></h6>
     }
     @if (!string.IsNullOrEmpty(Model.speakers))
     {
@@ -94,7 +138,7 @@
         <!-- 会议简介 需要根据判断是否渲染 -->
         <div class='meetingInfo'>
             <h5 class="head"></h5>
-            <h6 class='meetingDesc'>@Model.introduction</h6>
+            <h6 class='meetingDesc'>@Html.Raw(Model.introduction)</h6>
             <h5 class="foot"></h5>
         </div>
     }
@@ -116,8 +160,8 @@
                         <!-- 循环每个时段项目 -->
                         <div class="line">
                             <h6 class="l">@agenda.time</h6>
-                            <h6 class="c">@agenda.schedule</h6>
-                            <h6 class="r">@agenda.name</h6>
+                            <h6 class="c">@Html.Raw(agenda.schedule)</h6>
+                            <h6 class="r">@Html.Raw(agenda.name)</h6>
                         </div>
                     }
                 </div>
@@ -129,15 +173,51 @@
         <div class="btnGroup">
             @if (Model.vote)
             {
-                <img src="~/Content/images/hyhd@2x.png" onclick="Jump('1')">
+                switch (voteImage)
+                {
+                    case "voteSemicircle":
+                        <img src="~/Content/images/hyhd@2x.png" onclick="Jump('1')">
+                        break;
+                    case "voteCircle":
+                        <img src="~/Content/images/会议互动@2x.png" onclick="Jump('1')">
+                        break;
+                    default:
+                        break;
+                }
             }
             @if (Model.live)
             {
-                <img src="~/Content/images/zxgk@2x.png" onclick="Jump('3')">
+                switch (liveImage)
+                {
+                    case "live":
+                        <img src="~/Content/images/zxgk@2x.png" onclick="Jump('3')">
+                        break;
+                    case "leftCircleLive":
+                        <img src="~/Content/images/zxgk2@2x.png" onclick="Jump('3')">
+                        break;
+                    case "rightCircleLive":
+                        <img src="~/Content/images/zxgk1@2x.png" onclick="Jump('3')">
+                        break;
+                    case "circleLive":
+                        <img src="~/Content/images/在线观看@2x.png" onclick="Jump('3')">
+                        break;
+                    default:
+                        break;
+                }
             }
             @if (ViewBag.IsData == "true")
             {
-                <img src="~/Content/images/hyzl@2x.png" onclick="Jump('2')">
+                switch (isDataImage)
+                {
+                    case "isDataSemicircle":
+                        <img src="~/Content/images/hyzl@2x.png" onclick="Jump('2')">
+                        break;
+                    case "isDataCircle":
+                        <img src="~/Content/images/会议资料@2x.png" onclick="Jump('2')">
+                        break;
+                    default:
+                        break;
+                }
             }
         </div>
 

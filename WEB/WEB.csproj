@@ -412,8 +412,13 @@
     <Content Include="Content\images\ywc1.png" />
     <Content Include="Content\images\zilist.png" />
     <Content Include="Content\images\zxgk%402x.png" />
+    <Content Include="Content\images\zxgk1%402x.png" />
+    <Content Include="Content\images\zxgk2%402x.png" />
     <Content Include="Content\images\为召开.png" />
     <Content Include="Content\images\今日召开3%402x.png" />
+    <Content Include="Content\images\会议互动%402x.png" />
+    <Content Include="Content\images\会议资料%402x.png" />
+    <Content Include="Content\images\在线观看%402x.png" />
     <Content Include="Content\images\已完成.png" />
     <Content Include="Content\index.css" />
     <Content Include="favicon.ico" />

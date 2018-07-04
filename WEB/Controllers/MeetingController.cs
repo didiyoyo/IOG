@@ -69,7 +69,7 @@ namespace WEB.Controllers
                     var meetingScheduleInfo = meetingScheduleList.GroupBy(m => new { date = m.date }, (Station, StationGroup) => new MeetingScheduleInfo
                     {
                         MarkTime = Station.date.Value,
-                        AgendaList = StationGroup.ToList()
+                        AgendaList = StationGroup.OrderBy(a=>a.id).ToList()
                     }).ToList();
                     ViewBag.MeetingScheduleInfo = meetingScheduleInfo;
                 }
@@ -163,7 +163,7 @@ namespace WEB.Controllers
                     var meetingScheduleInfo = meetingScheduleList.GroupBy(m => new { date = m.date }, (Station, StationGroup) => new MeetingScheduleInfo
                     {
                         MarkTime = Station.date.Value,
-                        AgendaList = StationGroup.ToList()
+                        AgendaList = StationGroup.OrderBy(a=>a.id).ToList()
                     }).ToList();
                     ViewBag.MeetingScheduleInfo = meetingScheduleInfo;
                 }
