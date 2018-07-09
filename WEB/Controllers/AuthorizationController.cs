@@ -298,6 +298,66 @@ namespace WEB.Controllers
             }
         }
 
+        [PermissionsAttribute(false)]
+        public void MyMeetingInfo(int id)
+        {
+            if (Session["openid"] == null)
+            {
+                Response.Redirect(OpenWeiXinTools.getWebAuthUrl(System.Configuration.ConfigurationManager.ConnectionStrings["weixin.AppID"].ConnectionString, Request.Url.ToString(), ""));
+                return;
+            }
+            else
+            {
+                string url = System.Configuration.ConfigurationManager.ConnectionStrings["url"].ConnectionString;
+
+                UserInfoService userInfoService = new UserInfoService();
+                UserInfo userInfo = new UserInfo();
+                try
+                {
+                    userInfo = userInfoService.SelectByOpenid(Session["openid"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    log.Info("获取用户信息失败！");
+                    log.Error(ex);
+                    Response.Redirect(url + "/portal/wechat/login");
+                    Response.End();
+                    return;
+                }
+                if (userInfo == null)//未获取到用户信息
+                {
+                    Response.Redirect("/IO/WeiXin/Error/获取用户信息错误！");
+                    Response.End();
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(userInfo.statusCode))
+                {
+                    Response.Redirect(url + "/portal/wechat/login");
+                    Response.End();
+                }
+                if (userInfo.statusCode.Equals("Accepted"))//已认证跳转到我的会议页面
+                {
+                    Response.Redirect("/IO/Meeting/MeetingInfo?id=" + id);
+                    Response.End();
+                }
+                else if (userInfo.statusCode.Equals("Undetermined"))
+                {
+                    Response.Redirect("/IO/Meeting/MeetingInfo?id=" + id);
+                    Response.End();
+                }
+                else if (userInfo.statusCode.Equals("Registed"))//已注册的如果有会议可以进我的会议列表
+                {
+                    Response.Redirect("/IO/Meeting/MeetingInfo?id=" + id);
+                    Response.End();
+                }
+                else//未认证跳转到登录页面
+                {
+                    Response.Redirect(url + "/portal/wechat/login");
+                    Response.End();
+                }
+            }
+        }
+
         /// <summary>
         /// 二维码页面，所有入口
         /// </summary>

@@ -86,8 +86,12 @@ namespace Services.Service
                                 meetingid = meeting.mid,
                                 key = key
                             });
+                            if (meeting.mid == 794||meeting.mid==795)
+                            {
+                                db.Commit();
+                                continue;
+                            }
                         }
-
                         foreach (var accept in db.td_seminar_meeting_accept.Where(x => x.MId == meeting.mid).ToList())
                         {
                             string AppID = System.Configuration.ConfigurationManager.ConnectionStrings["weixin.AppID"].ConnectionString;
@@ -99,7 +103,7 @@ namespace Services.Service
                                 {
                                     touser = accept.OPenID,
                                     template_id = System.Configuration.ConfigurationManager.ConnectionStrings["tmpKey"].ConnectionString,
-                                    url = System.Configuration.ConfigurationManager.ConnectionStrings["Host"].ConnectionString + "/Authorization/QR/0",
+                                    url = System.Configuration.ConfigurationManager.ConnectionStrings["Host"].ConnectionString + "/WeiXin/MeetingInfo/"+meeting.mid,
                                     data = new
                                     {
                                         first = new
@@ -129,7 +133,7 @@ namespace Services.Service
                                         },
                                         remark = new
                                         {
-                                            value = "会议即将召开，点击进入我的会议列表",
+                                            value = "会议即将召开，请点击查看",
                                             color = "#173177"
                                         },
                                     }
@@ -335,6 +339,10 @@ namespace Services.Service
                                 var openIdList = db.UserInfo.Where(u => doctorCodeList.Contains(u.doctorCode)).Select(u => u.openid).ToList();
                                 if (meeting.mbegintime > end24 && meeting.mbegintime < end48 && (!meeting.pushCount.HasValue || meeting.pushCount.Value == 0))
                                 {
+                                    if (!string.IsNullOrEmpty(meeting.createtime) && meeting.mbegintime < Convert.ToDateTime(meeting.createtime).AddHours(48))
+                                    {
+                                        continue;
+                                    }
                                     foreach (var openid in openIdList)
                                     {
                                         //发送消息

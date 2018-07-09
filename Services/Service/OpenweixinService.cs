@@ -38,7 +38,7 @@ namespace Services.Service
             try
             {
                 new Thread(new mdSeminarMeetingMainService().Task) { IsBackground = true }.Start();
-                new Thread(new mdSeminarMeetingMainService().PushMessageToDoctor) { IsBackground = true }.Start();
+                //new Thread(new mdSeminarMeetingMainService().PushMessageToDoctor) { IsBackground = true }.Start();
                 //DateTime start = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd 11:56:00"));
                 //DateTime end = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd 12:12:00"));
                 //if (DateTime.Now>start && DateTime.Now<end)

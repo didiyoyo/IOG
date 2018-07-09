@@ -40,6 +40,27 @@
             background: #e5edef;
             -webkit-appearance: none;
         }
+
+
+
+
+        body {
+            background: url(/IO/Content/images/bg@2x.png) no-repeat;
+            width: 100%;
+            height: 100%;
+            background-size: 100% 100%;
+        }
+        .bakgray {
+            background: none;
+            height: 100vh;
+            overflow: scroll;
+        }
+        .survey .wrapper {
+            background: url(/IO/Content/images/jx@2x.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+
     </style>
 </head>
 <body>
@@ -187,12 +208,13 @@
                         });
                         setTimeout(function () {
                             layer.closeAll();
-                            if (@(ViewBag.datacount) > 0) {
+                            @*if (@(ViewBag.datacount) > 0) {
 								window.location.href = "/IO/Meeting/DataList/" + $("#meetingid").val();
                             }
                             else {
                                 window.location.href = "/IO/Meeting/Index";
-                            }
+                            }*@
+                            WeixinJSBridge.call('closeWindow');
                         }, 2000);
                     } else {
                         layer.open({
@@ -201,13 +223,14 @@
                         });
                         setTimeout(function () {
                             layer.closeAll();
-                            if (@(ViewBag.datacount) > 0) {
+                            @*if (@(ViewBag.datacount) > 0) {
                                 //window.location.href = "/IO/Meeting/Interaction/" + $("#id").val();
 								window.location.href = "/IO/Meeting/DataList/" + $("#meetingid").val();
                             }
                             else {
                                 window.location.href = "/IO/Meeting/Index";
-                            }
+                            }*@
+                            WeixinJSBridge.call('closeWindow');
                         }, 2000);
                     }
                 },
