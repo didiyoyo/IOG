@@ -95,6 +95,7 @@
     <input id="MeetingMode" type="hidden" value="@Model.meetingmode" />
     <input id="doctortype" type="hidden" value="@Model.doctortype" />
     <input id="isAccept" type="hidden" value="@isAccept.ToString()" />
+    <input id="isToMeetingInfo" type="hidden" value="@(ViewBag.IsToMeetingInfo.ToString())"/>
     @* <section class="" style="height: 100vh; overflow: hidden;">*@
     @if (Model.mhyrc_type == "0" || Model.mhyrc_type == "1" || Model.mhyrc_type == null)
     {
@@ -349,7 +350,7 @@
                                     btn: ['我知道了'],
                                     yes: function () {
                                         layer.closeAll();
-                                        window.location.href = "/IO/Meeting/Index/1";
+                                        window.location.href = ($('#isToMeetingInfo').val() == 'True') ? ("/IO/Meeting/MeetingInfo/" + $("#mid").val()):"/IO/Meeting/Index/1";
                                     }
                                 });
                             }
@@ -359,7 +360,7 @@
                                     btn: 'OK',
                                     yes: function () {
                                         layer.closeAll();
-                                        window.location.href = "/IO/Meeting/Index/1";
+                                        window.location.href = ($('#isToMeetingInfo').val() == 'True') ? ("/IO/Meeting/MeetingInfo/" + $("#mid").val()) : "/IO/Meeting/Index/1";
                                     }
                                 });
                             }

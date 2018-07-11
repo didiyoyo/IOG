@@ -73,6 +73,26 @@
             .oneNew:last-of-type {
                 /*border: none;*/
             }
+
+
+        .oneNew .status {
+            position: absolute;
+            right: -.38rem;
+            top: .5rem;
+            width: .45rem;
+            font-size: .2rem;
+            text-align: center;
+            padding: .05rem;
+            color: white;
+            font-weight: bolder;
+            background: #1b96ac;
+            border-radius: .1rem 0 0 .1rem;
+            border: solid #d8d8d8;
+            border-width: 1px 0 1px 1px;
+        }
+
+
+
         .enterMeet, .travelInformation, .speechInfo {
             
             width: calc(148px*0.6);
@@ -246,7 +266,15 @@
                     @foreach (var item in ViewBag.NOTOpen)
                     {
                         <div class="oneNew clearfix">
-                            <div onclick="JumpToMeetingInfo(@item.Meeting.mid)">
+
+                            @if (item.IsDisplayInvitationIcon)
+                            {
+                                <div class="status">
+                                    未接收邀请
+                                </div>
+                            }
+
+                            <div onclick="@((bool)item.IsDisplayInvitationIcon?("JumpToMeetingSchedule("+item.Meeting.mid+")"):("JumpToMeetingInfo("+item.Meeting.mid+")"))">
                                 <p class="meet-title s">@item.Meeting.mtitle</p>
 
                                 <div @*class="meet-new"*@>
@@ -255,7 +283,7 @@
                                     <p class="s" style="font-size:14px;">会议地点:@item.Meeting.msite</p>
                                 </div>
                             </div>
-                            <p class="enterMeet" onclick="Jump(@item.Meeting.mid)"></p>
+                            <p class="enterMeet" onclick="@((bool)item.IsDisplayInvitationIcon?("JumpToMeetingSchedule("+item.Meeting.mid+")"):("Jump("+@item.Meeting.mid+")")) "></p>
                             @*<p class="travelInformation" onclick="travelInformation(@item.Meeting.mid)"></p>*@
                             @if (!string.IsNullOrEmpty(item.Meeting.doctorimg) || !string.IsNullOrEmpty(item.Meeting.doctorurl))
                             {
@@ -299,7 +327,13 @@
                     @foreach (var item in ViewBag.Open)
                     {
                         <div class="oneNew clearfix">
-                            <div onclick="JumpToMeetingInfo(@item.Meeting.mid)">
+                            @if (item.IsDisplayInvitationIcon)
+                            {
+                                <div class="status">
+                                    未接收邀请
+                                </div>
+                            }
+                            <div onclick="@((bool)item.IsDisplayInvitationIcon?("JumpToMeetingSchedule("+item.Meeting.mid+")"):("JumpToMeetingInfo("+item.Meeting.mid+")"))">
                                 <p class="meet-title s">@item.Meeting.mtitle</p>
 
                                 <div @*class="meet-new"*@>
@@ -309,7 +343,7 @@
                                 </div>
                             </div>
 
-                            <p class="enterMeet" onclick="Jump(@item.Meeting.mid)"></p>
+                            <p class="enterMeet" onclick="@((bool)item.IsDisplayInvitationIcon?("JumpToMeetingSchedule("+item.Meeting.mid+")"):("Jump("+@item.Meeting.mid+")"))"></p>
                             @if (!string.IsNullOrEmpty(item.Meeting.doctorimg) || !string.IsNullOrEmpty(item.Meeting.doctorurl))
                             {
                                 if (item.Meeting.doctortype == 1 || item.Meeting.doctortype == 2 || item.Meeting.doctortype == null)
@@ -434,6 +468,12 @@
             click_log(id, "会议详情");
             AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "会议详情", id, '');
             window.location.href = "/IO/Meeting/MeetingInfo/" + id;
+        }
+
+        function JumpToMeetingSchedule(id) {
+            click_log(id, "查看邀请函");
+            AddBehaviorRecord(new Date().Format("yyyy-MM-dd hh:mm:ss"), new Date().Format("yyyy-MM-dd hh:mm:ss"), "VIEW", "查看邀请函", id, '');
+            window.location.href = "/IO/Meeting/MeetingSchedule/" + id +"?isToMeetingInfo=true";
         }
 
         function travelInformation(id) {

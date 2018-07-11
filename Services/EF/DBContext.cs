@@ -46,6 +46,7 @@ namespace Services
             modelBuilder.Entity<table_input>().ToTable(product + "table_input");
             modelBuilder.Entity<agenda>().ToTable(product + "agenda");
             modelBuilder.Entity<file_information>().ToTable(product + "file_information");
+            modelBuilder.Entity<sfe_push>().ToTable(product + "sfe_push");
         }
         #region 字段
         public DbSet<MeetingSign> MeetingSign { get; set; }
@@ -76,6 +77,8 @@ namespace Services
         public DbSet<agenda> agenda { get; set; }
 
         public DbSet<file_information> file_information { get; set; }
+
+        public DbSet<sfe_push> sfe_push { get; set; }
         #endregion
         ~DBContext()
         {

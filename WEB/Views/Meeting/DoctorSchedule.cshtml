@@ -29,15 +29,69 @@
             Time=return_departuretime
         }
     };
+
     //Dictionary<int, List<string>> shcdule = new Dictionary<int, List<string>>();
     var timeGroup = timeInfo.Where(m => m.Time.HasValue).GroupBy(m => new { time = m.Time.Value.Date }, (Station, StationGroup) => new DoctorTimeGroupModel
     {
         Name = Station.time.ToString(),
         GroupList = StationGroup.Select(m => m.Name).ToList()
     }).ToList();
+    if (timeGroup != null && timeGroup.Count > 0)
+    {
+        if (!doctorShcdule.departuretime.HasValue&&!string.IsNullOrEmpty(doctorShcdule.transportation)&&!string.IsNullOrEmpty(doctorShcdule.Flight))
+        {
+            timeGroup.Insert(0, new DoctorTimeGroupModel
+            {
+                Name = "",
+                GroupList = new List<string> { "departuretime" }
+            });
+        }
+        if (!doctorShcdule.return_departuretime.HasValue&&!string.IsNullOrEmpty(doctorShcdule.return_transportation)&&!string.IsNullOrEmpty(doctorShcdule.return_Flight))
+        {
+            timeGroup.Add(new DoctorTimeGroupModel
+            {
+                Name = "",
+                GroupList = new List<string> { "return_departuretime" }
+            });
+        }
+    }
+    else
+    {
+        if (!doctorShcdule.departuretime.HasValue && !string.IsNullOrEmpty(doctorShcdule.transportation) && !string.IsNullOrEmpty(doctorShcdule.Flight))
+        {
+            if (!doctorShcdule.return_departuretime.HasValue && !string.IsNullOrEmpty(doctorShcdule.return_transportation) && !string.IsNullOrEmpty(doctorShcdule.return_Flight))
+            {
+                timeGroup.Add(new DoctorTimeGroupModel
+                {
+                    Name = "",
+                    GroupList = new List<string> { "departuretime", "return_departuretime" }
+                });
+            }
+            else
+            {
+                timeGroup.Add(new DoctorTimeGroupModel
+                {
+                    Name = "",
+                    GroupList = new List<string> { "departuretime" }
+                });
+            }
+
+        }
+        else
+        {
+            if (!doctorShcdule.return_departuretime.HasValue && !string.IsNullOrEmpty(doctorShcdule.return_transportation) && !string.IsNullOrEmpty(doctorShcdule.return_Flight))
+            {
+                timeGroup.Add(new DoctorTimeGroupModel
+                {
+                    Name = "",
+                    GroupList = new List<string> { "return_departuretime" }
+                });
+            }
+        }
+    }
 
     var meeting = ViewBag.Meeting as md_seminar_meeting_main;
-    }
+        }
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,7 +127,7 @@
                 @switch (key.GroupList[0])
                 {
                     case "departuretime":
-                        <div class='left'><p>@doctorShcdule.departuretime.Value.Day.</p><p>@doctorShcdule.departuretime.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
+                        <div class='left'>@Html.Raw(doctorShcdule.departuretime.HasValue ? ("<p>" + doctorShcdule.departuretime.Value.Day + ".</p><p>" + doctorShcdule.departuretime.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3) + "</p>") : "")</div>
                         break;
                     case "date_stay":
                         <div class='left'><p>@doctorShcdule.date_stay.Value.Day.</p><p>@doctorShcdule.date_stay.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
@@ -82,7 +136,7 @@
                         <div class='left'><p>@doctorShcdule.departure_date.Value.Day.</p><p>@doctorShcdule.departure_date.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
                         break;
                     case "return_departuretime":
-                        <div class='left'><p>@doctorShcdule.return_departuretime.Value.Day.</p><p>@doctorShcdule.return_departuretime.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3)</p></div>
+                        <div class='left'>@Html.Raw(doctorShcdule.return_departuretime.HasValue ? ("<p>" + doctorShcdule.return_departuretime.Value.Day + ".</p><p>" + doctorShcdule.return_departuretime.Value.ToString("MMMM", new System.Globalization.CultureInfo("en-us")).Substring(0, 3) + "</p>") : "")</div>
                         break;
                 }
             <div class='right'>
@@ -96,9 +150,14 @@
                         {
                             <div class='part flight'>
                                 <span class='tag'></span>
-                                <h6>@doctorShcdule.Flight&nbsp;&nbsp;@doctorShcdule.city - @doctorShcdule.arrivecity</h6>
-                                <div class='details'><h5>@doctorShcdule.setout</h5> <img src="/IO/Content/images/arrow.png"> <h5>@doctorShcdule.destination</h5></div>
-                                <div class='details'><h5 class='date'>@doctorShcdule.departuretime.Value.ToString("MM.dd")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@doctorShcdule.departuretime.Value.ToString("HH:mm")</h5><h5 class='date'>@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
+                                <h6>@doctorShcdule.Flight&nbsp;&nbsp;@(doctorShcdule.city)@((!string.IsNullOrEmpty(doctorShcdule.city)&&!string.IsNullOrEmpty(doctorShcdule.arrivecity))?" - ":"")@(doctorShcdule.arrivecity)</h6>
+                                <div class='details'><h5>@doctorShcdule.setout</h5>
+                                @if (!string.IsNullOrEmpty(doctorShcdule.setout)&&!string.IsNullOrEmpty(doctorShcdule.destination))
+                                {
+                                    <img src="/IO/Content/images/arrow.png">
+                                }
+                                <h5>@doctorShcdule.destination</h5></div>
+                                <div class='details'><h5 class='date'>@(doctorShcdule.departuretime.HasValue?doctorShcdule.departuretime.Value.ToString("MM.dd"):"")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@((doctorShcdule.departuretime.HasValue&& doctorShcdule.departuretime.Value.ToString("HH:mm")!="00:00") ?doctorShcdule.departuretime.Value.ToString("HH:mm"):"")</h5><h5 class='date'>@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@((doctorShcdule.arrivaltime.HasValue&& doctorShcdule.arrivaltime.Value.ToString("HH:mm")!="00:00") ? doctorShcdule.arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
                             </div>
                         }
                         //else if (doctorShcdule.transportation == "火车")
@@ -106,9 +165,14 @@
                         {
                             <div class='part train'>
                                 <span class='tag'></span>
-                                <h6>@doctorShcdule.Flight&nbsp;&nbsp;@doctorShcdule.city - @doctorShcdule.arrivecity</h6>
-                                <div class='details'><h5>@doctorShcdule.setout</h5> <img src="/IO/Content/images/arrow.png"> <h5>@doctorShcdule.destination</h5></div>
-                                <div class='details'><h5 class='date'>@doctorShcdule.departuretime.Value.ToString("MM.dd")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@doctorShcdule.departuretime.Value.ToString("HH:mm")</h5><h5 class='date'>@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
+                                <h6>@doctorShcdule.Flight&nbsp;&nbsp;@(doctorShcdule.city)@((!string.IsNullOrEmpty(doctorShcdule.city)&&!string.IsNullOrEmpty(doctorShcdule.arrivecity))? " - " : "")@(doctorShcdule.arrivecity)</h6>
+                                <div class='details'><h5>@doctorShcdule.setout</h5>
+                                @if (!string.IsNullOrEmpty(doctorShcdule.setout) && !string.IsNullOrEmpty(doctorShcdule.destination))
+                                {
+                                    <img src="/IO/Content/images/arrow.png">
+                                }
+                                <h5>@doctorShcdule.destination</h5></div>
+                                <div class='details'><h5 class='date'>@(doctorShcdule.departuretime.HasValue?doctorShcdule.departuretime.Value.ToString("MM.dd"):"")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@((doctorShcdule.departuretime.HasValue&& doctorShcdule.departuretime.Value.ToString("HH:mm")!="00:00") ?doctorShcdule.departuretime.Value.ToString("HH:mm"):"")</h5><h5 class='date'>@(doctorShcdule.arrivaltime.HasValue ? doctorShcdule.arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@((doctorShcdule.arrivaltime.HasValue&& doctorShcdule.arrivaltime.Value.ToString("HH:mm")!="00:00") ? doctorShcdule.arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
                             </div>
                         }
                     }
@@ -138,9 +202,14 @@
                         {
                             <div class='part flight'>
                                 <span class='tag'></span>
-                                <h6>@doctorShcdule.return_Flight&nbsp;&nbsp;@doctorShcdule.return_city - @doctorShcdule.return_arrivecity</h6>
-                                <div class='details'><h5>@doctorShcdule.return_setout</h5> <img src="/IO/Content/images/arrow.png"> <h5>@doctorShcdule.return_destination</h5></div>
-                                <div class='details'><h5 class='date'>@doctorShcdule.return_departuretime.Value.ToString("MM.dd")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@doctorShcdule.return_departuretime.Value.ToString("HH:mm")</h5><h5 class='date'>@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
+                                <h6>@doctorShcdule.return_Flight&nbsp;&nbsp;@(doctorShcdule.return_city)@((!string.IsNullOrEmpty(doctorShcdule.return_city)&&!string.IsNullOrEmpty(doctorShcdule.return_arrivecity))? " - " :"")@(doctorShcdule.return_arrivecity)</h6>
+                                <div class='details'><h5>@doctorShcdule.return_setout</h5>
+                                @if (!string.IsNullOrEmpty(doctorShcdule.return_setout) && !string.IsNullOrEmpty(doctorShcdule.return_destination))
+                                {
+                                    <img src="/IO/Content/images/arrow.png">
+                                }
+                                <h5>@doctorShcdule.return_destination</h5></div>
+                                <div class='details'><h5 class='date'>@(doctorShcdule.return_departuretime.HasValue?doctorShcdule.return_departuretime.Value.ToString("MM.dd"):"")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@((doctorShcdule.return_departuretime.HasValue&& doctorShcdule.return_departuretime.Value.ToString("HH:mm")!="00:00") ?doctorShcdule.return_departuretime.Value.ToString("HH:mm"):"")</h5><h5 class='date'>@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@((doctorShcdule.return_arrivaltime.HasValue&& doctorShcdule.return_arrivaltime.Value.ToString("HH:mm")!="00:00") ? doctorShcdule.return_arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
                             </div>
                         }
                         //else if (doctorShcdule.return_transportation == "火车")
@@ -148,9 +217,14 @@
                         {
                             <div class='part train'>
                                 <span class='tag'></span>
-                                <h6>@doctorShcdule.return_Flight&nbsp;&nbsp;@doctorShcdule.return_city - @doctorShcdule.return_arrivecity</h6>
-                                <div class='details'><h5>@doctorShcdule.return_setout</h5> <img src="/IO/Content/images/arrow.png"> <h5>@doctorShcdule.return_destination</h5></div>
-                                <div class='details'><h5 class='date'>@doctorShcdule.return_departuretime.Value.ToString("MM.dd")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@doctorShcdule.return_departuretime.Value.ToString("HH:mm")</h5><h5 class='date'>@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
+                                <h6>@doctorShcdule.return_Flight&nbsp;&nbsp;@(doctorShcdule.return_city)@((!string.IsNullOrEmpty(doctorShcdule.return_city)&&!string.IsNullOrEmpty(doctorShcdule.return_arrivecity))? " - " : "")@(doctorShcdule.return_arrivecity)</h6>
+                                <div class='details'><h5>@doctorShcdule.return_setout</h5> 
+                                @if (!string.IsNullOrEmpty(doctorShcdule.return_setout) && !string.IsNullOrEmpty(doctorShcdule.return_destination))
+                                {
+                                    <img src="/IO/Content/images/arrow.png">
+                                }
+                                <h5>@doctorShcdule.return_destination</h5></div>
+                                <div class='details'><h5 class='date'>@(doctorShcdule.return_departuretime.HasValue?doctorShcdule.return_departuretime.Value.ToString("MM.dd"):"")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@((doctorShcdule.return_departuretime.HasValue&& doctorShcdule.return_departuretime.Value.ToString("HH:mm")!="00:00") ?doctorShcdule.return_departuretime.Value.ToString("HH:mm"):"")</h5><h5 class='date'>@(doctorShcdule.return_arrivaltime.HasValue ? doctorShcdule.return_arrivaltime.Value.ToString("MM.dd") : "")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@((doctorShcdule.return_arrivaltime.HasValue&& doctorShcdule.return_arrivaltime.Value.ToString("HH:mm")!="00:00") ? doctorShcdule.return_arrivaltime.Value.ToString("HH:mm") : "")</h5></div>
                             </div>
                         }
                     }

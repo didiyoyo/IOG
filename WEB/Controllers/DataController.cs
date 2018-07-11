@@ -387,6 +387,7 @@ namespace WEB.Controllers
                             {
                                 tableInput.IsSign = "是";
                                 tableInput.CreateTime = DateTime.Now;
+                                tableInput.statusCode = userInfo.statusCode;
                             }
                         }
                         db.Commit();

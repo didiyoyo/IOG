@@ -12,7 +12,7 @@ namespace Services.Service
         public List<md_seminar_survey> GetSurveyByMid(int mid) {
             using (DBContext db = new DBContext())
             {
-                var list = db.md_seminar_survey.AsNoTracking().Where(x => x.mid == mid && x.sstate==1).ToList();
+                var list = db.md_seminar_survey.AsNoTracking().Where(x => x.mid == mid && x.sstate==1).OrderBy(x => x.sid).ToList();
                 return list;
             }
         }

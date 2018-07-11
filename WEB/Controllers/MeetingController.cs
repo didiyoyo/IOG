@@ -33,7 +33,7 @@ namespace WEB.Controllers
         SurveyService ss = new SurveyService();
         VoteService vs = new VoteService();
         DoctorScheduleService ds = new DoctorScheduleService();
-        public ActionResult Index(int id=1)
+        public ActionResult Index(int id = 1)
         {
             try
             {
@@ -43,9 +43,16 @@ namespace WEB.Controllers
                 var OpenID = Session["openid"].ToString();
                 List<md_seminar_meeting_main> list = smm.GetMeetingByOpenID(OpenID);
                 DateTime start = DateTime.Now;
-                ViewBag.NOTOpen = list.Where(x => x.mendtime > start).Select(x => new DoctorScheduleInfo { IsDisplayDoctorSchedule = ds.IsExistDoctorSchedule(x, OpenID), Meeting = x }).ToList();
-                ViewBag.Open = list.Where(x => x.mendtime <= start).Select(x => new DoctorScheduleInfo { IsDisplayDoctorSchedule = ds.IsExistDoctorSchedule(x, OpenID), Meeting = x }).ToList();
-                ViewBag.tag = id==1?1:2;
+                List<int> acceptListList = new List<int>();
+                using (DBContext context = new DBContext())
+                {
+                    acceptListList= context.td_seminar_meeting_accept.Where(a => a.OPenID == OpenID).Select(a=>a.MId).ToList();
+                }
+                var notOpenList = list.Where(x => x.mendtime > start).Select(x => new DoctorScheduleInfo { IsDisplayDoctorSchedule = ds.IsExistDoctorSchedule(x, OpenID), Meeting = x, IsDisplayInvitationIcon = !acceptListList.Contains(x.mid) }).ToList();
+                var openList = list.Where(x => x.mendtime <= start).Select(x => new DoctorScheduleInfo { IsDisplayDoctorSchedule = ds.IsExistDoctorSchedule(x, OpenID), Meeting = x, IsDisplayInvitationIcon = !acceptListList.Contains(x.mid) }).ToList();
+                ViewBag.NOTOpen = notOpenList;
+                ViewBag.Open = openList;
+                ViewBag.tag = id == 1 ? 1 : 2;
                 return View();
             }
             catch (Exception)
@@ -136,7 +143,7 @@ namespace WEB.Controllers
             }
         }
 
-        public ActionResult MeetingSchedule(int id)
+        public ActionResult MeetingSchedule(int id,bool isToMeetingInfo=false)
         {
             ViewBag.mid = id;
             md_seminar_meeting_main meeting = null;
@@ -182,6 +189,7 @@ namespace WEB.Controllers
                 var accept = context.td_seminar_meeting_accept.FirstOrDefault(a => a.OPenID == openid && a.MId == meeting.mid);
                 ViewBag.IsAccept = accept != null;
             }
+            ViewBag.IsToMeetingInfo = isToMeetingInfo;
             if (meeting.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && meeting.mhyrc_type == "2")
             {
                 return View("~/Views/Meeting/MeetingScheduleToLargeUnderLine.cshtml", meeting);

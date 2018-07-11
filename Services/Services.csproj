@@ -110,6 +110,7 @@
     <Compile Include="Models\Publicnumber.cs" />
     <Compile Include="Models\QRCode.cs" />
     <Compile Include="Models\SendEmail.cs" />
+    <Compile Include="Models\sfe_push.cs" />
     <Compile Include="Models\sfe_register.cs" />
     <Compile Include="Models\table_input.cs" />
     <Compile Include="Models\td_seminar_meeting_accept.cs" />

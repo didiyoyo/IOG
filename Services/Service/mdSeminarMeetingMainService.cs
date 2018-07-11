@@ -32,8 +32,16 @@ namespace Services.Service
         {
             using (DBContext db = new DBContext())
             {
-                var ids = db.td_seminar_meeting_accept.Where(x => x.OPenID == openId && x.State == 1).Select(x => x.MId).ToArray();
-                var list = db.md_seminar_meeting_main.Where(x => ids.Contains(x.mid)&&x.Type!=1).OrderBy(x => x.mbegintime).ToList();
+                var midList = db.td_seminar_meeting_accept.Where(x => x.OPenID == openId && x.State == 1).Select(x => x.MId).ToList();
+
+                UserInfoService userInfoService = new UserInfoService();
+                var userInfo = userInfoService.SelectByOpenid(openId);
+                var workId = db.sfe_register.FirstOrDefault(r => r.doc_code == userInfo.doctorCode)?.NETWORK_EXTERNAL_ID_BMS_CN__C;
+                var inputMeetingCodeList = db.table_input.Where(t => t.networkid == workId && t.ModelType == "邀请文件").Select(t=>t.mcode).Distinct().ToList();
+                var meetingIdList = db.md_seminar_meeting_main.Where(m => inputMeetingCodeList.Contains(m.mcode)).Select(m => m.mid).ToList();
+                var pushMeetingId = db.sfe_push.Where(p => p.openid == openId && meetingIdList.Contains(p.mid.Value) && (p.ispush.HasValue && p.ispush.Value) && (p.pushType == "推送邀请函"||p.pushType== "推送变更邀请函")).Select(p=>p.mid.Value).Distinct().ToList();
+                //TODO 扫过码的
+                var list = db.md_seminar_meeting_main.Where(x => (midList.Contains(x.mid)|| (pushMeetingId.Contains(x.mid)&&x.mendtime>DateTime.Now)) &&x.Type!=1).OrderBy(x => x.mbegintime).ToList();
                 return list;
             }
         }
@@ -50,6 +58,7 @@ namespace Services.Service
                 log.Info(ex);
             }
         }
+
         public void Task()
         {
             try
@@ -76,21 +85,22 @@ namespace Services.Service
                         }
                         else
                         {
-                            string key = meeting.mbegintime.Value.ToString() + "24";
-                            if (db.messagelog.Any(x => x.meetingid == meeting.mid && x.key == key))
-                            {
-                                continue;
-                            }
-                            db.messagelog.Add(new messagelog()
-                            {
-                                meetingid = meeting.mid,
-                                key = key
-                            });
-                            if (meeting.mid == 794||meeting.mid==795)
-                            {
-                                db.Commit();
-                                continue;
-                            }
+                            //string key = meeting.mbegintime.Value.ToString() + "24";
+                            //if (db.messagelog.Any(x => x.meetingid == meeting.mid && x.key == key))
+                            //{
+                            //    continue;
+                            //}
+                            //db.messagelog.Add(new messagelog()
+                            //{
+                            //    meetingid = meeting.mid,
+                            //    key = key
+                            //});
+                            //if (meeting.mid == 794||meeting.mid==795)
+                            //{
+                            //    db.Commit();
+                            //    continue;
+                            //}
+                            continue;
                         }
                         foreach (var accept in db.td_seminar_meeting_accept.Where(x => x.MId == meeting.mid).ToList())
                         {
