@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Services;
 using Services.Models;
 using Services.Service;
 using System;
@@ -18,15 +19,20 @@ namespace WEB.Controllers
         SurveyService ss = new SurveyService();
         SurveyResultService srs = new SurveyResultService();
         MeetingDetailService mds = new MeetingDetailService();
+        mdSeminarMeetingMainService smm = new mdSeminarMeetingMainService();
         //
         // GET: /Survey/
 
         public ActionResult Index(int id)
         {
             ViewBag.id = id;
+
+            string openid = Session["openid"].ToString();
+            var meeting = smm.GetMeetingById(id);
             var list = ss.GetSurveyByMid(id);
             int datacount = mds.GetMeetingDataByMid(id).Count;
             ViewBag.datacount = datacount;
+            ViewBag.SurvayTitle = meeting.survaytitle;
             //return View("Index_old",list);
             return View(list);
         }
@@ -61,7 +67,7 @@ namespace WEB.Controllers
                 }
 
                 var i = srs.AddVoteResult(vr);
-                return Json(new { success = i == -1 ? false : true, msg = i == -1 ? "不可以重复提交" : "提交成功，页面跳转中，请稍等" }, JsonRequestBehavior.AllowGet); 
+                return Json(new { success = i == -1 ? false : true, msg = i == -1 ? "不可以重复提交" : "已提交成功，谢谢您的宝贵意见！" }, JsonRequestBehavior.AllowGet); 
             }
             catch (Exception)
             {

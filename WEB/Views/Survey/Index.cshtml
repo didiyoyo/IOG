@@ -19,13 +19,28 @@
     <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/css/index.css" rel="stylesheet" />
     <style>
+        .headTitle {
+            font-size: .45rem;
+            color: #fff;
+            text-shadow: 2px 2px 2px #00007a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 2.5rem;
+            position: absolute;
+            text-align: center;
+            padding: 0 .5rem;
+        }
+
 
         .btn-container {
-            overflow:hidden;
+            overflow: hidden;
         }
-        .btn-container #submit {
-            margin-bottom: 1rem;
-        }
+
+            .btn-container #submit {
+                margin-bottom: 1rem;
+            }
 
         .inputArea {
             width: 100%;
@@ -42,6 +57,15 @@
         }
 
 
+        .bakgray {
+            background: url(/IO/Content//images/qhbg@2x.png) no-repeat;
+            background-size: 100%;
+            margin-top: 2.3rem;
+            padding-top: 1rem;
+        }
+
+
+
 
 
         body {
@@ -49,25 +73,40 @@
             width: 100%;
             height: 100%;
             background-size: 100% 100%;
-        }
-        .bakgray {
-            background: none;
-            height: 100vh;
+            border-top: 1px solid;
             overflow: scroll;
         }
+
+        .bakgray {
+            /*background: none;*/
+            /*height: 100vh;*/
+            /*overflow: scroll;*/
+        }
+
         .survey .wrapper {
-            background: url(/IO/Content/images/jx@2x.png) no-repeat;
+            /*background: url(/IO/Content/images/jx@2x.png) no-repeat;*/
+            background-image: url(/IO/Content/images/wrapper_02.jpg) no-repeat;
             background-size: 100% 100%;
         }
 
-
+        .thanks {
+            width: 100%;
+            text-align: center;
+            color: grey;
+            font-size: .3rem;
+            /*text-shadow: black 1px 1px 1px;*/
+        }
     </style>
 </head>
 <body>
     <input type="hidden" id="meetingid" value="@(ViewBag.id)" />
+    <div class="headTitle">
+        @Html.Raw(ViewBag.SurvayTitle)
+    </div>
     <section class="bakgray survey">
+        <p class="thanks">感谢您参加此次会议,请根据您的切实感受给予评分</p>
         <div class="header clear">
-            <img src="~/Content/images/sj@2x.png" alt="bg_top" class="header_bg" />
+            @*<img src="~/Content/images/sj@2x.png" alt="bg_top" class="header_bg" />*@
         </div>
         <div class="wrapper">
             <div class="inv-content">
@@ -77,10 +116,10 @@
                         <div class="choice-title" data-mid="@list[index].mid" data-value="@list[index].stype" data-id="@list[index].sid">
                             <p id="brand">
                                 <span class="num">@(index + 1)</span>
-                                <span class="text">@list[index].stitle @(list[index].stype == 1 ? "(多选)" :(list[index].stype == 0? "(单选)" :"(填空)") )</span>
+                                <span class="text">@list[index].stitle @(list[index].stype == 1 ? "(多选)" : (list[index].stype == 0 ? "(单选)" : "(填空)") )</span>
                             </p>
                             <ul>
-                                @if (list[index].stype == 0|| list[index].stype==1)
+                                @if (list[index].stype == 0 || list[index].stype == 1)
                                 {
                                     if (list[index].sanswer != null)
                                     {
@@ -122,10 +161,10 @@
     $(function(){
         WriteLog('', '',"VIEW","浏览");
         var documentHeight = $(document).height();
-        $(".bakgray").height(documentHeight);
+        //$(".bakgray").height(documentHeight);
         $(window).resize(function () {
             var documentHeight = $(document).height();
-            $(".bakgray").height(documentHeight);
+            //$(".bakgray").height(documentHeight);
 
         });
         $(".chioced").click(function () {

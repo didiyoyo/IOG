@@ -464,5 +464,11 @@ namespace WEB.Controllers
                 Response.Write("更新失败，耗时：" + (end - start).TotalSeconds + "秒！");
             }
         }
+
+        public void updateuser(string openid)
+        {
+            UserInfoService userInfoService = new UserInfoService();
+            userInfoService.UpdateByOpenid(openid);
+        }
     }
 }

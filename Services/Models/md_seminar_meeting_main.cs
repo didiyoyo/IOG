@@ -86,5 +86,7 @@ namespace Services.Models
         /// </summary>
         [Display(Name = "会议状态")]
         public int? Type { get; set; }
+
+        public string survaytitle { get; set; }
     }
 }
