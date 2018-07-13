@@ -64,7 +64,19 @@ namespace WEB.Controllers
         public ActionResult MeetingInfo(int id)
         {
             string openid = Session["openid"].ToString();
-            var meeting = smm.GetMeetingById(id);
+            md_seminar_meeting_main meeting = null;
+            try
+            {
+                meeting = smm.GetMeetingById(id);
+                if (meeting == null || meeting.Type == 1)
+                {
+                    return RedirectToAction("Index", "Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Error");
+            }
             bool IsData = mds.GetIsData(id);
             var user = new UserInfoService().SelectByOpenid(openid);
 

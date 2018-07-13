@@ -335,17 +335,7 @@ namespace WEB.Controllers
                     Response.Redirect(url + "/portal/wechat/login");
                     Response.End();
                 }
-                if (userInfo.statusCode.Equals("Accepted"))//已认证跳转到我的会议页面
-                {
-                    Response.Redirect("/IO/Meeting/MeetingInfo?id=" + id);
-                    Response.End();
-                }
-                else if (userInfo.statusCode.Equals("Undetermined"))
-                {
-                    Response.Redirect("/IO/Meeting/MeetingInfo?id=" + id);
-                    Response.End();
-                }
-                else if (userInfo.statusCode.Equals("Registed"))//已注册的如果有会议可以进我的会议列表
+                if (userInfo.statusCode.Equals("Accepted")|| userInfo.statusCode.Equals("Undetermined")|| userInfo.statusCode.Equals("Registed"))//已认证跳转到我的会议页面
                 {
                     Response.Redirect("/IO/Meeting/MeetingInfo?id=" + id);
                     Response.End();

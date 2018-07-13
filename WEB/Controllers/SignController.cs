@@ -112,37 +112,8 @@ namespace WEB.Controllers
                             {
                                 return RedirectToAction("Index", "Error");
                             }
-                            var workId = db.sfe_register.FirstOrDefault(r => r.doc_code == userInfo.doctorCode)?.NETWORK_EXTERNAL_ID_BMS_CN__C;
-                            var inportInfo = db.table_input.FirstOrDefault(t => t.networkid == workId && t.mcode == meeting.mcode && t.ModelType == "邀请文件");
-                            //非后台导入的大型线下会议直接跳转到签到成功页面
-                            if (meeting.meetingmode == (int)MeetingModeTypeEnum.LargeUnderLine && inportInfo == null)
-                            {
-                                var meetingSign = new MeetingSign
-                                {
-                                    createTime = DateTime.Now,
-                                    meetingid = meeting.mid,
-                                    openid = openid
-                                };
-                                string[] s1 = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
-                                Random rd = new Random();
-                                string randomInvitationCode = s1[rd.Next(0, s1.Length)] + s1[rd.Next(0, s1.Length)] + rd.Next(100000, 1000000);
-                                int count = 0;
-                                while (db.MeetingSign.FirstOrDefault(m => m.randominvitationcode == randomInvitationCode && m.meetingid == meeting.mid) != null)
-                                {
-                                    randomInvitationCode = s1[rd.Next(0, s1.Length)] + s1[rd.Next(0, s1.Length)] + rd.Next(100000, 1000000);
-                                    count++;
-                                    if (count > 20)
-                                        break;
-                                }
-                                meetingSign.randominvitationcode = randomInvitationCode;
-                                db.MeetingSign.Add(meetingSign);
-                                db.Commit();
-                                return RedirectToAction("Success", new { id = qrCode.meetingid });
-                            }
-                            else
-                            {
-                                return RedirectToAction("MeetingSign", new { id = qrCode.meetingid });
-                            }
+                            HandleMeetingSign(meeting, userInfo);
+                            return RedirectToAction("Success", new { id = qrCode.meetingid });
                         }
                         else
                         {
@@ -160,6 +131,59 @@ namespace WEB.Controllers
                 return RedirectToAction("Success", new { id });
             }
         }
+
+        /// <summary>
+        /// 处理会议签到
+        /// </summary>
+        /// <param name="meeting"></param>
+        /// <param name="userInfo"></param>
+        /// <returns></returns>
+        private void HandleMeetingSign(md_seminar_meeting_main meeting,UserInfo userInfo)
+        {
+            string openid = Session["openid"].ToString();
+            using (DBContext db = new DBContext())
+            {
+                if (db.MeetingSign.Any(x => x.meetingid == meeting.mid && x.openid == openid))
+                {
+                    
+                }
+                else
+                {
+                    var meetingSign = new MeetingSign
+                    {
+                        createTime = DateTime.Now,
+                        meetingid = meeting.mid,
+                        openid = openid
+                    };
+                    string[] s1 = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+                    Random rd = new Random();
+                    string randomInvitationCode = s1[rd.Next(0, s1.Length)] + s1[rd.Next(0, s1.Length)] + rd.Next(100000, 1000000);
+                    int count = 0;
+                    while (db.MeetingSign.FirstOrDefault(m => m.randominvitationcode == randomInvitationCode && m.meetingid == meeting.mid) != null)
+                    {
+                        randomInvitationCode = s1[rd.Next(0, s1.Length)] + s1[rd.Next(0, s1.Length)] + rd.Next(100000, 1000000);
+                        count++;
+                        if (count > 20)
+                            break;
+                    }
+                    meetingSign.randominvitationcode = randomInvitationCode;
+                    db.MeetingSign.Add(meetingSign);
+                    var workId = db.sfe_register.FirstOrDefault(r => r.doc_code == userInfo.doctorCode)?.NETWORK_EXTERNAL_ID_BMS_CN__C;
+                    var tableInputList = db.table_input.Where(t => t.mcode == meeting.mcode && t.networkid == workId).ToList();
+                    if (tableInputList!=null&&tableInputList.Count() > 0)
+                    {
+                        foreach (var tableInput in tableInputList)
+                        {
+                            tableInput.IsSign = "是";
+                            tableInput.CreateTime = DateTime.Now;
+                            tableInput.statusCode = userInfo.statusCode;
+                        }
+                    }
+                    db.Commit();
+                }
+            }
+        }
+
         public ActionResult GetSMSCode(string phone)
         {
             ThirdpartyService service = new ThirdpartyService();
